@@ -1,0 +1,4 @@
+dbhost = localhost
+dbusername = root
+dbpassword =
+dbname = biblio
