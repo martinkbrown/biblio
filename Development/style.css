@@ -1,0 +1,36 @@
+/* 
+    Document   : style
+    Created on : Mar 5, 2010, 12:24:49 AM
+    Author     : martin
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+/* 
+   TODO customize this sample style
+   Syntax recommendation http://www.w3.org/TR/REC-CSS2/
+*/
+
+root { 
+    display: block;
+}
+
+.form_error
+{
+    color:red;
+    font-weight: bold;
+}
+
+.form_message
+{
+    color:green;
+    font-weight: bold;
+}
+
+#title, #title a:visited, #title a:link, #title a:hover
+{
+    text-decoration: none;
+    color:black;
+}
+
+body #help-box{ font-size: 62.5%; }
