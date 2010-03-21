@@ -17,28 +17,54 @@ require_once('recaptcha/recaptchalib.php');
 
 // Variables for using Recaptcha
 $recaptchaSettings = new RecaptchaSettings();
-$ff = new FormValidator();
-$ff->isValidCaptcha($recaptchaSettings->private_key);
 
 // Variable for Storing Journal once All data is Good to Go :)
 
+if ($_POST) {
+    // Validating Data
+    $fv = new FormValidator();
+    $fv->violatesDbConstraints('journal', 'name','journal_name' ,'Journal Name');
+    $fv->violatesDbConstraints('journal', 'acronym','journal_acnym' ,'Acronym');
+    $fv->isValidCaptcha($recaptchaSettings->private_key);
+
+    // Validating email address
+    if ($fv->isEqual($user_email, $user_conf_email, 'Confirm Email'," Email addresses do not match")) {
+        $fv->isEmailAddress($email, $user_email, 'Your email');
+        $fv->violatesDbConstraints('journal', 'email','validated_email' ,'Your Email');
+    }
+
+    if ($fv->hasErrors()) {
+        $fv->listErrors();
+    } else {
+        // Save Form Data
+        $journal = new Journal();
+        $journal->setValue('name', 'journal_name');
+        $journal->setValue('acronym', 'journal_acnym');
+        $journal->setValue('approved', 0);
+        $journal->setValue('email','user_email');
+        $journal->setValue('create_date', mktime());
+
+        if($journal->save()) {
+            $fv->addMessage("name", "Great! Journal Entry Saved");
+            $fv->listMessages();
+        } else {
+            $fv->addError("name","There was an error saving the publisher record");
+            $fv->listErrors();
+        }
+
+        $util = new Utilities();
+        $util->redirect("submit_journal_verify.php");
+
+    }
 
 
 
-// Validating Data
 
-$fv = new FormValidator();
-// Validating email address
-if ($fv->isEqual($user_email, $user_conf_email, 'Confirm Email'," Email addresses do not match")) {
-    $fv->isEmailAddress($email, $user_email, 'Your email');
-    $fv->violatesDbConstraints('journal', 'email','validated_email' ,'Your Email');
+
+
+
+
 }
-
-$fv->violatesDbConstraints('journal', 'name','journal_name' ,'Journal Name');
-$fv->violatesDbConstraints('journal', 'acronym','journal_acnym' ,'Acronym');
-
-
-
 ?>
 
 
