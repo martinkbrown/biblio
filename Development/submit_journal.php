@@ -25,12 +25,13 @@ if ($_POST) {
     $fv = new FormValidator();
     $fv->violatesDbConstraints('journal', 'name','journal_name' ,'Journal Name');
     $fv->violatesDbConstraints('journal', 'acronym','journal_acnym' ,'Acronym');
+    $fv->isNull($_POST['journal_name'], 'Journal Name');
     $fv->isValidCaptcha($recaptchaSettings->private_key);
 
     // Validating email address
-    
     if ($fv->isEqual($_POST['user_email'], $_POST['user_conf_email'], 'Confirm Email',"Email addresses do not match")) {
         $fv->isEmailAddress($email, $_POST['user_email'], 'Your email');        
+        $fv->isNull($_POST['user_email'], 'Your email');
         $fv->violatesDbConstraints('journal', 'email',$_POST['user_email'] ,'Your Email');
     }
 
