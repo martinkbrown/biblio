@@ -53,7 +53,6 @@ if ($cname == ""){
 
 $grid->createGridFromRecordset($conference);
 echo $grid->getGrid();
-
 ?>
 
 <?php

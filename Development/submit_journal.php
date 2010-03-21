@@ -68,20 +68,20 @@ Fields marked with * are required <br>
         <tr>
             <td>Journal Name*</td>
             <td>
-                <input type= text name= 'journal_name' value="<?php echo $_POST ["journal_name"] ?>"/>
+                <input type= "text" name= "journal_name" value="<?php echo $_POST ["journal_name"] ?>"/>
             </td>
         </tr>
         <tr>
             <td> Acronym</td>
-            <td> <input type= text name= 'journal_acnym' value="<?php echo $_POST ["journal_acnym"] ?>"/>
+            <td> <input type= "text" name= "journal_acnym" value="<?php echo $_POST ["journal_acnym"] ?>"/>
         </tr>
         <tr>
             <td> Your email*</td>
-            <td> <input type= text name= 'user_email' value="<?php echo $_POST ["user_email"] ?>"/>
+            <td> <input type= "text" name= "user_email" value="<?php echo $_POST ["user_email"] ?>"/>
         </tr>
         <tr>
             <td> Confirm email*</td>
-            <td> <input type= text name= 'user_conf_email' value="<?php echo $_POST ["user_conf_email"] ?>"/>
+            <td> <input type= "text" name= "user_conf_email" value="<?php echo $_POST ["user_conf_email"] ?>"/>
         </tr>
         <tr>
             <td></td>
