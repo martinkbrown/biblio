@@ -28,9 +28,10 @@ if ($_POST) {
     $fv->isValidCaptcha($recaptchaSettings->private_key);
 
     // Validating email address
-    if ($fv->isEqual($user_email, $user_conf_email, 'Confirm Email'," Email addresses do not match")) {
-        $fv->isEmailAddress($email, $user_email, 'Your email');
-        $fv->violatesDbConstraints('journal', 'email','validated_email' ,'Your Email');
+    
+    if ($fv->isEqual($_POST['user_email'], $_POST['user_conf_email'], 'Confirm Email',"Email addresses do not match")) {
+        $fv->isEmailAddress($email, $_POST['user_email'], 'Your email');        
+        $fv->violatesDbConstraints('journal', 'email',$_POST['user_email'] ,'Your Email');
     }
 
     if ($fv->hasErrors()) {
@@ -38,10 +39,10 @@ if ($_POST) {
     } else {
         // Save Form Data
         $journal = new Journal();
-        $journal->setValue('name', 'journal_name');
-        $journal->setValue('acronym', 'journal_acnym');
+        $journal->setValue('name', $_POST['journal_name']);
+        $journal->setValue('acronym', $_POST['journal_acnym']);
         $journal->setValue('approved', 0);
-        $journal->setValue('email','user_email');
+        $journal->setValue('email',$_POST['user_email']);
         $journal->setValue('create_date', mktime());
 
         if($journal->save()) {
@@ -51,19 +52,10 @@ if ($_POST) {
             $fv->addError("name","There was an error saving the publisher record");
             $fv->listErrors();
         }
-
         $util = new Utilities();
         $util->redirect("submit_journal_verify.php");
 
     }
-
-
-
-
-
-
-
-
 }
 ?>
 
