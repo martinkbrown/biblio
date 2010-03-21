@@ -9,7 +9,6 @@
  *
  * @author martin
  */
-
 class FormValidator
 {
     /**
@@ -33,6 +32,26 @@ class FormValidator
     function addMessage($value,$message)
     {
         $this->messages[$value] = "<span class=\"form_message\">" . $message . "</span>";
+    }
+
+    /**
+     * This method checks two (2) values and determines whether they are the same or equal. This method
+     * produces an error message and returns false if the values are not equal and only returns true
+     * if the values are equal.
+     * @param <type> $value1 One value that you want to compare
+     * @param <type> $value2 The other value you want to compare to
+     * @param <type> $label The name of the field on the actual page
+     * @param <type> $error The error messages you want user to see when values are not equal
+     * @return bool true if values are equal and false if not
+     */
+    function isEqual($value1, $value2, $label, $error)
+    {
+        if ($value1 != $value2){
+            $this->addError($label, $error);
+            return false;
+        } else {
+            return true;
+        }
     }
 
     /**
@@ -334,7 +353,7 @@ class FormValidator
     {
         if(!$isbn)  return false;
 
-        $error = $isbn . " is not a valid ISBN number.";
+        $error = $label . " is not a valid ISBN number. Format must be xxxxxxxxxx or xxx-xxxxxxxxxx";
 
         $currISBN = new ISBNtest();
         $currISBN->set_isbn($isbn);
@@ -345,22 +364,33 @@ class FormValidator
         }
         else
         {
-            if ($currISBN->valid_gtin14() === true)
-            {
-                return $currISBN->get_gtin14();
-            }
-            else
-            {
-                if ($currISBN->valid_isbn13() === true)
-                {
-                    return $currISBN->get_isbn13();
-                }
-                else
-                {
-                   $this->addError($field,$error); 
-                }
-            }
-        }        
+            $this->addError($field,$error);
+
+            return false;
+        }
+
+        if ($currISBN->valid_gtin14() === true)
+        {
+            return $currISBN->get_gtin14();
+        }
+        else
+        {
+            $this->addError($field,$error);
+
+            return false;
+        }
+
+        if ($currISBN->valid_isbn13() === true)
+        {
+            return $currISBN->get_isbn13();
+        }
+        else
+        {
+            $this->addError($field,$error);
+
+            return false;
+        }
+        
     }
 }
 ?>
