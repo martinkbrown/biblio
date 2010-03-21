@@ -14,7 +14,7 @@ require_once FRONT_END . LIB . 'Recordset.php';
 
 class Journal extends Recordset {
 
-    var $query = "SELECT * FROM conference WHERE 1";
+    var $query = "SELECT * FROM journal WHERE 1";
 
     function loadJournals()
     {

@@ -23,7 +23,7 @@
                     <a href="conferences.php">Conferences</a>
                 </td>
                 <td>
-                    <a href="#">Journals</a>
+                    <a href="journals.php">Journals</a>
                 </td>
                 <td>
                     <a href="#">Authors</a>
