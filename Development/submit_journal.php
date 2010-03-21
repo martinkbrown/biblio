@@ -14,27 +14,26 @@ require_once('recaptcha/recaptchalib.php');
 ?>
 <?php
 // Declaring Variables
-
 // Variables for using Recaptcha
 $recaptchaSettings = new RecaptchaSettings();
-
-// Variable for Storing Journal once All data is Good to Go :)
+// Variable for Storing Journal once all data is Good to Go :)
 
 if ($_POST) {
     // Validating Data
     $fv = new FormValidator();
-    $fv->violatesDbConstraints('journal', 'name','journal_name' ,'Journal Name');
-    $fv->violatesDbConstraints('journal', 'acronym','journal_acnym' ,'Acronym');
+    $fv->violatesDbConstraints('journal', 'name',$_POST['journal_name'] ,'Journal Name');
+    $fv->violatesDbConstraints('journal', 'acronym',$_POST['journal_acnym'],'Acronym');
     $fv->isNull($_POST['journal_name'], 'Journal Name');
     $fv->isValidCaptcha($recaptchaSettings->private_key);
 
     // Validating email address
     if ($fv->isEqual($_POST['user_email'], $_POST['user_conf_email'], 'Confirm Email',"Email addresses do not match")) {
-        $fv->isEmailAddress($email, $_POST['user_email'], 'Your email');        
+        $fv->isEmailAddress($email, $_POST['user_email'], 'Your email');
         $fv->isNull($_POST['user_email'], 'Your email');
         $fv->violatesDbConstraints('journal', 'email',$_POST['user_email'] ,'Your Email');
     }
 
+    // If errors exist, inform user else save data and display confirmation page
     if ($fv->hasErrors()) {
         $fv->listErrors();
     } else {
@@ -50,16 +49,19 @@ if ($_POST) {
             $fv->addMessage("name", "Great! Journal Entry Saved");
             $fv->listMessages();
         } else {
-            $fv->addError("name","There was an error saving the publisher record");
+            $fv->addError("name","There was an error saving this Journal entry");
             $fv->listErrors();
         }
+
+        // Display confirmation page
         $util = new Utilities();
         $util->redirect("submit_journal_verify.php");
 
     }
 }
-?>
 
+
+?>
 
 <h2>Add a Journal</h2>
 Fields marked with * are required <br>
@@ -69,20 +71,20 @@ Fields marked with * are required <br>
         <tr>
             <td>Journal Name*</td>
             <td>
-                <input type= "text" name= "journal_name" value="<?php echo $_POST ["journal_name"] ?>"/>
+                <input type= "text" name= "journal_name" value="<?php echo $_POST ['journal_name'] ?>"/>
             </td>
         </tr>
         <tr>
             <td> Acronym</td>
-            <td> <input type= "text" name= "journal_acnym" value="<?php echo $_POST ["journal_acnym"] ?>"/>
+            <td> <input type= "text" name= "journal_acnym" value="<?php echo $_POST ['journal_acnym'] ?>"/>
         </tr>
         <tr>
             <td> Your email*</td>
-            <td> <input type= "text" name= "user_email" value="<?php echo $_POST ["user_email"] ?>"/>
+            <td> <input type= "text" name= "user_email" value="<?php echo $_POST ['user_email'] ?>"/>
         </tr>
         <tr>
             <td> Confirm email*</td>
-            <td> <input type= "text" name= "user_conf_email" value="<?php echo $_POST ["user_conf_email"] ?>"/>
+            <td> <input type= "text" name= "user_conf_email" value="<?php echo $_POST ['user_conf_email'] ?>"/>
         </tr>
         <tr>
             <td></td>
@@ -97,13 +99,3 @@ Fields marked with * are required <br>
     </table>
 
 </form>
-
-
-
-
-
-
-
-
-
-

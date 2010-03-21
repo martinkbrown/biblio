@@ -30,15 +30,16 @@ $grid = new JournalGrid();
 if ($_GET) {
     $jname = $_GET['journal_name'];
     if ($jname == "") {
-        $journal->loadJournals();
+        $journal->loadApprovedJournals();
     } else {
+        // To Check if it loads approved journals by keyword
         $journal->loadJournalsByKeyword($_GET['journal_name']);
     }
     $grid->setColumnTitle("_name","Name of Journal");
     $grid->createGridFromRecordset($journal);
     echo $grid->getGrid();
 } else {
-    $journal->loadJournals();
+    $journal->loadApprovedJournals();
     $grid->setColumnTitle("_name","Name of Journal");
     $grid->createGridFromRecordset($journal);
     echo $grid->getGrid();
