@@ -8,5 +8,5 @@ require_once LIB . 'Utilities.php';
 ?>
 
 <h2>Add a Journal</h2>
-<h3>Thank you for your submission. You request is being reviewed by the system administrator</h3>
-<a href ="index.php">Click here to return home</a>
+<h3>Thank you for your submission. You submission is being reviewed by the administrator</h3>
+<a href ="index.php">Click here to go back to the home page</a>
