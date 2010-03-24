@@ -1,5 +1,5 @@
 <?php
-/* 
+/*
  * This page creates a form for the user to fill out information
  * to add a conference to the database.
  * Author1: Sihle Wilson
@@ -28,9 +28,9 @@ function confirm_email($email,$confim_email){
 }
 $recaptchaSettings = new RecaptchaSettings();
 $country = new Country("SELECT * FROM country ORDER BY name");
-$conference = new Conference();
+$conference = new Conference($_GET['conf_id'] ? $_GET['conf_id'] : $_POST['conf_id']);
 $conference_meeting = new ConferenceMeeting();
-$publisher = new Publisher();
+$publisher = new Publisher($_POST['publisher_id']);
 $stateDd = new DropDownList('name');
 $stateDd->setFieldName("state_id");
 $stateDd->setExtraValues(array(0=>"-- Select Country first --"));
@@ -43,15 +43,10 @@ $countryDd->setSelectedValues($conference->getFormValue("country_id"));
 $countryDd->setProperty("id","country_id");
 $ff = new FormValidator();
 $ff->isValidCaptcha($recaptchaSettings->private_key);
-$conf_id = $_GET['conf_id'];
+$conf_id = $conference->getId();
 $conference_exisit = new Conference($conf_id);
-if ($flag_conf_exsist == false){
-        echo "<h2>Add a Conference</h2>";
-    }
-    else
-        echo "<h2>Add a Conference Meeting</h2>";
 
-echo "Fields marked with * are required <br><br>";
+$conf_exists_msg = 'This Conference exists. You may ignore this message or click <a href="' . $siteSettings->siteUrl . 'conference_meetings.php?conference_id=' . $conf_id . '">here</a> if you wish to view it.';
 
 if ($conf_id==""){
     //should i have submit a new conference or add a new conference meeting
@@ -71,11 +66,13 @@ if($_POST)
     $fv->violatesDbConstraints('conference_meeting', 'city', $conference_meeting->getFormValue('conf_city'),'City');
     $fv->violatesDbConstraints('conference_meeting', 'country_id', $conference_meeting->getFormValue('country_id'),'Country');
     $fv->violatesDbConstraints('conference_meeting', 'state_id', $conference_meeting->getFormValue('state_id'),'State');
-    $fv->violatesDbConstraints('publisher', 'name', $publisher->getFormValue('pub'),'Publisher');
+    //changed from violatesDbConstraints to isNull because the user may enter a publisher
+    //that already exists
+    $fv->isNull('publisher', 'name', $publisher->getFormValue('pub'),'Publisher');
     $fv->violatesDbConstraints('conference_meeting', 'publisher_website', $conference->getFormValue('pub_web'),'Publisher Website');
     $fv->violatesDbConstraints('conference_meeting', 'isbn', $conference_meeting->getFormValue('pub_isbn'),'ISBN');
-    $fv->isNull('conference_meeting', 'start_date', $conference_meeting->getFormValue('start_date'),'Start Date');
-    $fv->isNull('conference_meeting', 'end_date', $conference_meeting->getFormValue('end_date'),'End Date');
+    $fv->violatesDbNull('conference_meeting', 'start_date', $conference_meeting->getFormValue('start_date'),'Start Date');
+    $fv->violatesDbNull('conference_meeting', 'end_date', $conference_meeting->getFormValue('end_date'),'End Date');
     $fv->isValidDateRange("Start Date", "End Date", $conference_meeting->getFormValue('start_date'), $conference->getFormValue('end_date'));
     $check_email = confirm_email($conference->getFormValue('email'),$conference_meeting->getFormValue('confirm_email'));
 
@@ -91,7 +88,6 @@ if($_POST)
         $flag_recapcha = false;
         $ff->listErrors();
     }
-    
     if(($fv->hasErrors() || ($check_email == false || ($flag_recapcha==false))))
     {
         $fv->listErrors();
@@ -106,7 +102,19 @@ if($_POST)
         $conference_meeting->setValue('city',$conference_meeting->getFormValue('conf_city'));
         $conference_meeting->setValue('country_id',$conference_meeting->getFormValue('country_id'));
         $conference_meeting->setValue('state_id',$conference_meeting->getFormValue('state_id'));
-        $publisher->setValue('name',$publisher->getFormValue('pub'));
+
+        //if there is a value for publisher_id then
+        //this is not a new publisher. Set the publisher_id
+        //in the conference meeting
+        if($_POST['publisher_id'])
+        {
+            $conference_meeting->setValue('publisher_id',$conference_meeting->getFormValue('publisher_id'));
+        }
+        else
+        {
+            $publisher->setValue('name',$publisher->getFormValue('pub'));
+        }
+
         $conference_meeting->setValue('conference_website',$conference_meeting->getFormValue('conf_web'));
         $conference_meeting->setValue('publisher_website',$conference_meeting->getFormValue('pub_web'));
         $conference_meeting->setValue('isbn',$conference_meeting->getFormValue('pub_isbn'));
@@ -130,11 +138,11 @@ if($_POST)
             }
         }
         else $conference_meeting->setValue('conference_id', $conf_id);
-        
+
             if($conference_meeting->save())
             {
                 $sql_conf =& sql();
-                $publisher->setValue('id', $sql_conf->id());
+
                 $fv->addMessage("name", "Conference Meeting saved");
                 $fv->listMessages();
             }
@@ -143,35 +151,49 @@ if($_POST)
                 $fv->addError("name","There was an error saving the conference meeting record");
                 $fv->listErrors();
             }
-            if($publisher->save())
+
+            //only save the publisher if it doesn't exist already
+            if(!$_POST['publisher_id'])
             {
-                $fv->addMessage("name", "Publisher saved");
-                $fv->listMessages();
+                    if($publisher->save())
+                    {
+                        $fv->addMessage("name", "Publisher saved");
+                        $fv->listMessages();
+                    }
+                    else
+                    {
+                        $fv->addError("name","There was an error saving the publisher record");
+                        $fv->listErrors();
+                    }
             }
-            else
-            {
-                $fv->addError("name","There was an error saving the publisher record");
-                $fv->listErrors();
-            }
+
             $util = new Utilities();
             $util->redirect("submit_verify.php");
     }
 }
 
+if ($flag_conf_exsist == false){
+    echo "<h2>Add a Conference</h2>";
+}
+else
+    echo "<h2>Add a Conference Meeting</h2>";
 ?>
-
+<p>Fields marked with * are required</p>
+<div class="form_message" id="conf_exists"><?php echo isset($_GET['ce']) ? $conf_exists_msg : "&nbsp;"?></div>
 <form name ="frm_name" method="POST">
     <!---this creates the table for the layout of the form--->
     <table>
         <tr>
-            <td>Conference*</td>
+            <td>Conference* <a id="help-button" href="javascript:;">Help</a></td>
             <td>
               <?php if ($flag_conf_exsist == false)
-                  {print"<input type="."text"." name= 'conf_name' value='".$conference->getFormValue('conf_name')."'; size='40'>\n";
+                  {print"<input id='conf_name' autocomplete='off' type='text' name='conf_name' value='".$conference->getFormValue('conf_name')."'; size='40'>\n";
               }
               else {
                   echo $conference_exisit->getValue("name");
-              }?>
+              }
+              print '<input type="hidden" id="conf_id" name="conf_id" value="' . ($_GET['conf_id'] ? $_GET['conf_id'] : $_POST['conf_id']) . '"/>';
+              ?>
             </td>
             <td>
                <?php if ($flag_conf_exsist == false)
@@ -181,19 +203,19 @@ if($_POST)
             </td>
             <td>
                <?php if ($flag_conf_exsist == false)
-               {print"<input type="."text"." name= 'conf_acnym' value='".$conference->getFormValue('conf_acnym')."'; size='25'>\n";
+               {print"<input id='conf_acnym' type="."text"." name= 'conf_acnym' value='".$conference->getFormValue('conf_acnym')."'; size='25'>\n";
                }?>
             </td>
         </tr>
         <tr>
             <td>Conference Meeting*</td>
-            <td> <input type ="text" name ="conf_meet" size="40" value ="<?php echo $conference_meeting->getFormValue('conf_meet');?>" /></td>
+            <td> <input type ="text" id="conf_meet" name ="conf_meet" size="40" value ="<?php echo $conference_meeting->getFormValue('conf_meet');?>" /></td>
         </tr>
         <tr>
             <td> City* </td>
             <td> <input type ="text" name ="conf_city" size="40" value ="<?php echo $conference_meeting->getFormValue('conf_city'); ?>" /></td>
         </tr>
-        <tr> 
+        <tr>
             <td>Country*</td>
             <td><?php echo $countryDd->getDropDownFromRecordset($country);?></td>
         </tr>
@@ -203,7 +225,10 @@ if($_POST)
         </tr>
         <tr>
             <td>Publisher*</td>
-            <td><input autocomplete="off" type ="text" id="publisher" name ="pub" size="40" value ="<?php echo $publisher->getFormValue('pub');?>"/></td>
+            <td>
+                <input autocomplete="off" type ="text" id="publisher" name ="pub" size="40" value ="<?php echo $publisher->getFormValue('pub');?>"/>
+                <input type="hidden" name="publisher_id" id="publisher_id"/>
+            </td>
         </tr>
         <tr>
             <td>Publisher website</td>
@@ -246,7 +271,52 @@ if($_POST)
     </table>
 </form>
 
+<div id="help-box" title="Help">
+    <p>
+        The Conference field requires you to enter the name of the Conference.
+        The Conference Meeting field requires you to specify a meeting that
+        took place under the Conference.
+
+        <h3>Examples</h3>
+        <ol>
+            <li><strong>Conference</strong>: ACM Southeast Regional Conference</li>
+            <li><strong>Acronym</strong>: ACMSE</li>
+            <li><strong>Conference Meeting</strong>: The 1st ACM Southeast Conference</li>
+        </ol>
+
+        <ol>
+            <li><strong>Conference</strong>: Supercomputing</li>
+            <li><strong>Acronym</strong>: SC</li>
+            <li><strong>Conference Meeting</strong>: Supercomputing 2009</li>
+        </ol>
+
+        <ol>
+            <li><strong>Conference</strong>: International Symposium on Performance Analysis of Systems and Software</li>
+            <li><strong>Acronym</strong>: ISPASS</li>
+            <li><strong>Conference Meeting</strong>: ISPASS 2003</li>
+        </ol>
+
+    </p>
+</div>
+
+
 <script type="text/javascript">
+
+$(document).ready(function() {
+	var $dialog = $('#help-box')
+		.dialog({
+			autoOpen: false,
+                        modal: true,
+                        resizable: false,
+                        closeText: 'Close',
+                        width: 350,
+			title: 'Help for Add a Conference'
+		});
+
+	$('#help-button').click(function() {
+		$dialog.dialog('open');
+	});
+});
 
 //here we add the date picker
 $(function()
@@ -269,5 +339,35 @@ $("#country_id").change(function()
 $("#states").load("get_states_drop_down.php?state_id=<?php echo $conference_meeting->getFormValue("state_id");?>&country_id="+$('#country_id').val());
 
 $("#publisher").autocomplete("get_publishers_autocomplete.php");
+$('publisher').setOptions({ max: 5 });
+$("#publisher").result(function(event, data, formatted)
+{
+    $("#publisher_id").val(data[1]);
+});
+
+$("#conf_name").autocomplete("get_conferences_autocomplete.php");
+$('conf_name').setOptions({ max: 5 });
+$("#conf_name").result(function(event, data, formatted)
+{
+    $("#conf_id").val(data[1]);
+    link = '<a href="<?php echo $siteSettings->siteUrl . "conference_meetings.php?conference_id="?>'+data[1]+'">here</a>';
+    $("#conf_exists").html("This Conference exists. You may ignore this message or click " + link + " if you wish to view it.");
+
+    link = "submit_conference.php?conf_id="+data[1]+"&ce";
+
+    $("#conf_acnym").focus(function()
+    {
+        window.location.href=link;
+    });
+
+    $("#conf_meet").focus(function()
+    {
+        window.location.href=link;
+    });
+
+
+
+
+});
 
 </script>
