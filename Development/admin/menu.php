@@ -14,3 +14,11 @@
     <li><a href="main.php?page=view_states" target="main">States</a></li>
     <li><a href="main.php?page=view_countries" target="main">Countries</a></li>
 </ul>
+
+<h5>Site Management</h5>
+<ul>
+    <li><a href="main.php?page=settings&target=admin_settings" target="main">Admin Settings</a></li>
+    <li><a href="main.php?page=settings&target=db_settings" target="main">Database Settings</a></li>
+    <li><a href="main.php?page=settings&target=site_settings" target="main">Site Settings</a></li>
+    <li><a href="main.php?page=settings&target=recaptcha_settings" target="main">reCAPTCHA Settings</a></li>
+</ul>

@@ -21,7 +21,7 @@ class Publisher extends Recordset{
         $this->loadByQuery("SELECT * FROM publisher");
     }
 
-    function getPublisherByName($name)
+    function loadPublisherByName($name)
     {
         $name = stripslashes($name);
         $this->loadByQuery("SELECT * FROM publisher WHERE name = '$name'");

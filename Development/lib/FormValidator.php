@@ -37,6 +37,7 @@ class FormValidator
 
     function addError($value,$error)
     {
+        if($this->errors[$value]) $value = "_" . $value;
         $this->errors[$value] = "<span class=\"form_error\">" . $error . "</span>";
     }
 
