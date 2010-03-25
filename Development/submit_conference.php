@@ -21,11 +21,11 @@ require_once OBJECTS.'State.php';
 require_once OBJECTS.'Country.php';
 
 //set up object creation for later
-function confirm_email($email,$confim_email){
-    if ($email != $confim_email){
-        return false;
-    } else return true;
-}
+//function confirm_email($email,$confim_email){
+//    if ($email != $confim_email){
+//        return false;
+//    } else return true;
+//}
 $recaptchaSettings = new RecaptchaSettings();
 $country = new Country("SELECT * FROM country ORDER BY name");
 $conference = new Conference($_GET['conf_id'] ? $_GET['conf_id'] : $_POST['conf_id']);
@@ -68,19 +68,19 @@ if($_POST)
     $fv->violatesDbConstraints('conference_meeting', 'state_id', $conference_meeting->getFormValue('state_id'),'State');
     //changed from violatesDbConstraints to isNull because the user may enter a publisher
     //that already exists
-    $fv->isNull('publisher', 'name', $publisher->getFormValue('pub'),'Publisher');
+    //DROP DOWN so i deleted - $fv->isNull('publisher', 'name', $publisher->getFormValue('pub'),'Publisher');
     $fv->violatesDbConstraints('conference_meeting', 'publisher_website', $conference->getFormValue('pub_web'),'Publisher Website');
     $fv->violatesDbConstraints('conference_meeting', 'isbn', $conference_meeting->getFormValue('pub_isbn'),'ISBN');
     $fv->violatesDbNull('conference_meeting', 'start_date', $conference_meeting->getFormValue('start_date'),'Start Date');
     $fv->violatesDbNull('conference_meeting', 'end_date', $conference_meeting->getFormValue('end_date'),'End Date');
     $fv->isValidDateRange("Start Date", "End Date", $conference_meeting->getFormValue('start_date'), $conference->getFormValue('end_date'));
-    $check_email = confirm_email($conference->getFormValue('email'),$conference_meeting->getFormValue('confirm_email'));
+    $check_email = $fv->oracle_string($conference->getFormValue('email'),$conference_meeting->getFormValue('confirm_email'));
 
     if ($check_email){
         $fv->violatesDbConstraints('conference_meeting', 'email', $conference_meeting->getFormValue('email'),'Email');
         $fv->isEmailAddress("email", $conference_meeting->getFormValue('email'), "Email");
     }
-    else {echo "Emails do not match";}
+   // else {echo "Emails do not match";}
     //no errors then try save record
     $flag_recapcha = true;
     if($ff->hasErrors())
