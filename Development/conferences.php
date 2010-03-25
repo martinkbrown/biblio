@@ -32,7 +32,7 @@
     <h4>Browse Conferences by Acronym: <?php print_alpha($_GET['confname']) ?> </h4>
 
 <!this form allows the user to view what the search and allows search to occur>
-    <form action ="conferences.php?confname="  name ="frm_name" method="GET" >
+    <form action ="conferences.php?confname=&reset=y"  name ="frm_name" method="GET" >
         <p>Search Conferences: <input  type="text" id ="conf_name" name ="conf_name" value ="<?php if ($_GET['conf_name'] == "")
             {echo "Enter conference name here";}else echo $_GET['conf_name'];?>"
         onclick="this.value=''"   size="65" >
@@ -41,15 +41,19 @@
     </form>
 <?php
 // gets the conference name/letter from the link
+$reset = $_GET['reset'];
 $cname = $_GET['confname'];
 $grid = new ConferenceGrid();
 $conference = new Conference();
 $grid->setColumnTitle("_name","Name of Conference");
-$conference->loadApprovedConferences();
-$conference->loadApprovedConferences();
-if ($cname == ""){
-  $conference->loadConferencesByKeyword($_GET['conf_name']);
-}else{ $conference->loadConferencesByFirstLetter($cname); }
+//$conference->loadApprovedConferences();
+//$conference->loadApprovedConferences();
+if($_GET['conf_name']!=""){
+    $conference->loadConferencesByKeyword($_GET['conf_name']);
+}
+if ($cname != ""){
+    $conference->loadConferencesByFirstLetter($cname);
+}
 
 $grid->createGridFromRecordset($conference);
 echo $grid->getGrid();
