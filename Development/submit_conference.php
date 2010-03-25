@@ -48,6 +48,14 @@ $conference_exisit = new Conference($conf_id);
 
 $conf_exists_msg = 'This Conference exists. You may ignore this message or click <a href="' . $siteSettings->siteUrl . 'conference_meetings.php?conference_id=' . $conf_id . '">here</a> if you wish to view it.';
 
+if ($flag_conf_exsist == false){
+    echo "<h2>Add a Conference</h2>";
+}
+else
+    echo "<h2>Add a Conference Meeting</h2>";
+
+echo "<h4>Fields marked with * are required</h4>";
+
 if ($conf_id==""){
     //should i have submit a new conference or add a new conference meeting
     $flag_conf_exsist = false;
@@ -172,13 +180,9 @@ if($_POST)
     }
 }
 
-if ($flag_conf_exsist == false){
-    echo "<h2>Add a Conference</h2>";
-}
-else
-    echo "<h2>Add a Conference Meeting</h2>";
+
 ?>
-<p>Fields marked with * are required</p>
+
 <div class="form_message" id="conf_exists"><?php echo isset($_GET['ce']) ? $conf_exists_msg : "&nbsp;"?></div>
 <form name ="frm_name" method="POST">
     <!---this creates the table for the layout of the form--->
