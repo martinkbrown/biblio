@@ -126,6 +126,8 @@ class Grid {
      */
     var $gridSelect = false;
 
+    var $noResults = "No results found";
+
     /**
      * Constructor
      */
@@ -197,7 +199,7 @@ class Grid {
 
         if(!$this->results)
         {
-            $this->grid = "No results found";
+            $this->grid = $this->noResults;
             return;
         }
 
@@ -495,6 +497,11 @@ class Grid {
     function setGridSelect()
     {
         $this->gridSelect = true;
+    }
+
+    function setNoResultsMessage($message)
+    {
+        $this->noResults = $message;
     }
 
     /**
