@@ -6,8 +6,17 @@
 
     require_once OBJECTS . 'Conference.php';
 
-    $conference = new Conference();
-    $conference->loadApprovedConferences();
+    $sql =& sql();
+    $keyword = $sql->escape($_GET['q']);
+    $limit = $_GET['limit'];
+
+    $query = "SELECT * FROM conference WHERE
+                        name REGEXP '[[:<:]]{$keyword}'
+                        AND approved = 1";
+
+    $limit ? $query .= " LIMIT {$limit}" : "";
+
+    $conference = new Conference($query);
 
     if($conference->id)
     {

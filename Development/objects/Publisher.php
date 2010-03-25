@@ -36,7 +36,7 @@ class Publisher extends Recordset{
         $sql =& sql();
         $keyword = $sql->escape($keyword);
 
-        $this->loadByQuery("SELECT * FROM publisher WHERE name LIKE '%{$keyword}%'");
+        $this->loadByQuery("SELECT * FROM publisher WHERE name LIKE '{$keyword}%'");
     }
 }
 ?>

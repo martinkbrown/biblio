@@ -38,8 +38,7 @@ class Journal extends Recordset {
     {
         $sql =& sql();
         $keyword = $sql->escape($keyword);
-        $this->query .= " AND (name LIKE '%{$keyword}%'
-                            OR acronym LIKE '%{$keyword}%')";
+        $this->query .= " AND name REGEXP '[[:<:]]{$keyword}[[:>:]]'";
 
         $this->loadByQuery($this->query . " ORDER BY name");
     }

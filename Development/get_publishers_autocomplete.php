@@ -6,9 +6,17 @@
 
     require_once OBJECTS . 'Publisher.php';
 
-    $publisher = new publisher();
-    $publisher->loadPublishers();
+    $sql =& sql();
+    $keyword = $sql->escape($_GET['q']);
+    $limit = $_GET['limit'];
 
+    $query = "SELECT * FROM publisher WHERE
+                        name REGEXP '[[:<:]]{$keyword}'";
+                                    
+    $limit ? $query .= " LIMIT {$limit}" : "";
+
+    $publisher = new Publisher($query);
+    
     if($publisher->id)
     {
         do
