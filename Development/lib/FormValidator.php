@@ -24,6 +24,17 @@ class FormValidator
      * @param string $value     the name of the field that this error will be linked to
      * @param string $error     the error, in plain English
      */
+
+    function oracle_string($string,$confim_string){
+        if ($string != $confim_string){
+            $value = "email";
+            $error="Emails do not match!!!";
+            $this->addError($value, $error);
+            return false;
+        }
+        return true;
+    }
+
     function addError($value,$error)
     {
         $this->errors[$value] = "<span class=\"form_error\">" . $error . "</span>";
