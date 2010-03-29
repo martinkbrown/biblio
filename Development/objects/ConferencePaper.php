@@ -13,14 +13,17 @@ require_once 'Author.php';
 require_once 'AuthorConferencePaper.php';
 require_once 'ConferenceSession.php';
 
-class ConferencePaper {
+class ConferencePaper extends Recordset {
     /**
      *
      * @var string  The main query for retrieving conference papers
      */
+    var $cs;
+        
     var $query = "SELECT cp.id, cp.title, cp.start_page, cp.end_page, cp.create_date, cp.email, cp.approved,
                                 cs.id as session_id, cs.name as session_name
-                                FROM (conference_paper cp, author a, author_conference_paper acp)
+                                FROM (conference_paper cp, author a, author_conference_paper acp, conference_session cs)
+                                LEFT JOIN conference_session s ON cp.conference_session_id = cs.id
                                 WHERE cp.id = acp.conference_paper_id AND a.id = acp.author_id  ";
 
     /**
@@ -33,7 +36,7 @@ class ConferencePaper {
      *
      * @var ConferenceSession
      */
-    var $cs;
+
 
     /**
      * You should use the methods to load the conference meetings instead
