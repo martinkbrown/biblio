@@ -1,0 +1,125 @@
+<?php
+/* 
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+/**
+ * Description of ConferencePaper
+ *
+ * @author martin
+ */
+require_once 'Author.php';
+require_once 'AuthorConferencePaper.php';
+require_once 'ConferenceSession.php';
+
+class ConferencePaper {
+    /**
+     *
+     * @var string  The main query for retrieving conference papers
+     */
+    var $query = "SELECT cp.id, cp.title, cp.start_page, cp.end_page, cp.create_date, cp.email, cp.approved,
+                                cs.id as session_id, cs.name as session_name
+                                FROM (conference_paper cp, author a, author_conference_paper acp)
+                                WHERE cp.id = acp.conference_paper_id AND a.id = acp.author_id  ";
+
+    /**
+     *
+     * @var array   An array containing the authors of this conference paper
+     */
+    var $authors = array();
+
+    /**
+     *
+     * @var ConferenceSession
+     */
+    var $cs;
+
+    /**
+     * You should use the methods to load the conference meetings instead
+     *
+     */
+    function ConferencePaper($id=0)
+    {
+        parent::Recordset($this->query . " AND cp.id = '$id'","conference_paper");
+    }
+
+    function getConferencePapersByAuthor($author_id)
+    {
+        $this->query .= " AND a.id = '$author_id'";
+
+        $this->loadByQuery($this->query . " ORDER BY cp.title");
+    }
+
+    /**
+     *
+     * @param Author $author    An Author object. Should contain the information about one of the paper's authors
+     */
+    function addAuthor($author)
+    {
+        array_push($this->authors,$author);
+    }
+
+    /**
+     *
+     * @param ConferenceSession @todo
+     */
+    function setConferenceSession($conference_session)
+    {
+        $this->cs = $conference_session;
+    }
+
+    /**
+     *
+     * @return bool     You should use the save() function
+     */
+    function insert()
+    {
+        if(parent::insert())
+        {
+            $this->saveAuthors();
+        }
+
+        else return false;
+
+        return $this->cs->save();
+    }
+
+    /**
+     *
+     * @return bool     You should use the save() function
+     */
+    function update()
+    {
+        if(parent::update())
+        {
+            $this->saveAuthors();
+        }
+
+        else return false;
+
+        return $this->cs->save();
+    }
+
+    /**
+     * You should not be calling this explicityly. It will be called when you save this ConferencePaper
+     */
+    function saveAuthors()
+    {
+        $main_author = false;
+
+        foreach($this->authors as $author)
+        {
+            $author->save();
+
+            $acp = new AuthorConferencePaper($author->getId(),$this->getId());
+
+            $acp->setValue('author_id',$author->getId());
+            $acp->setValue('conference_paper_id',$this->getId());
+            $acp->setValue('main_author',$main_author ? 0 : 1);
+
+            $acp->save();
+        }
+    }
+}
+?>
