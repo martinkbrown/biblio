@@ -15,7 +15,9 @@ require_once FRONT_END . LIB . 'Date.php';
 class ConferenceTableGrid extends Grid {
 
     function handleName($row){
-        return '<a href="conference_meeting_toc.php?conference_id='.$row['id'].'">'.$row['name'].'</a>';
+        $conf_id = $_GET['conference_id'];
+        echo $conf_id;
+        return '<a href="conference_meeting_toc.php?big_conf='.$conf_id.'&conference_meeting_id='.$row['id'].'">'.$row['name'].'</a>';
     }
 
     function handleCity($row){
