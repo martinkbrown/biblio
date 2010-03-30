@@ -20,7 +20,7 @@
         {
             $got_papers = false;
             $papers = "";
-            $sm .= "<tr><td>Did you mean
+            $sm .= "<span class=\"did_you_mean\">Did you mean
                     <a href=\"javascript:;\">" . $author->firstname . " " . $author->initial . " " .
                                     $author->lastname . "</a>, author of ";
 
@@ -32,7 +32,7 @@
                 do
                 {
                     $papers .= "\"<b>" . $conf_paper->title . "</b>\", ";
-                    $counter++;
+                    $paper_counter++;
 
                 }while($conf_paper->next() && $paper_counter < 3);
             }
@@ -47,7 +47,7 @@
                     do
                     {
                         $papers .= "\"<b>" . $journal_paper->title . "</b>\", ";
-                        $counter++;
+                        $paper_counter++;
 
                     }while($journal_paper->next() && $paper_counter < 3);
                 }
@@ -55,7 +55,7 @@
 
             $papers = substr($papers,0,strlen($papers)-2);
 
-            $sm .= $papers . "?</td></tr>\n";
+            $sm .= $papers . "?</span><br/>\n";
 
             if($got_papers) echo $sm;
 

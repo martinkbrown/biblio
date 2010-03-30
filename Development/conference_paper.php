@@ -120,9 +120,9 @@ if($_POST)
             <td> <input type ="text" id="conf_paper" name ="paper_title" size="40" value ="<?php echo $conference_paper->getFormValue('paper_title');?>" /></td>
         </tr>
         <tr>
-            <td><b>Authors</b></td> <td id="auto_author" > </td>
+            <td><b>Authors</b></td> <td id="auto_author" colspan="3"> </td>
         </tr>
-        <tr>
+        <tr class="author_row">
             <td><b>Main Author</b></td>
             <td><b>First Name*</b><input id="test" class="author_item" type ="text" name ="first_name[]" size ="27" value="<?php echo ($_POST['first_name'][0]); ?>"/></td>
             <td><b>Middle Inital</b><input class="author_item" type ="text" name ="mid_initial[]" size ="10" id="mi" value="<?php echo ($_POST['mid_initial'][0]); ?>"/></td>
@@ -134,7 +134,7 @@ if($_POST)
             $counter = count($_POST['first_name']);
             //echo $counter;
             for ($i=1;$i<$counter;$i++){
-                echo '<tr id ="'.$i.'"><td><b>Coauthor </b></td><td><b>First Name*</b><input class="author_item" type ="text" name ="first_name[]" size ="27" id="fn" value ='.$_POST['first_name'][$i].' /></td><td><b>Middle Inital</b><input type ="text" name ="mid_initial[]" size ="10" id="mi" value='.$_POST['mid_initial'][$i].' /></td><td><b>Last Name*</b><input type ="text" name ="last_name[]" size ="27" id="ln" value='.$_POST['last_name'][$i].' /></td><td><a href="javascript:void;" onClick="removeFormField('.$i.');">Remove</a></td></tr>';
+                echo '<tr id ="'.$i.'"><td><b>Coauthor </b></td><td><b>First Name*</b><input class="author_item" type ="text" name ="first_name[]" size ="27" id="fn" value ='.$_POST['first_name'][$i].' /></td><td><b>Middle Inital</b><input type ="text" name ="mid_initial[]" size ="10" id="mi" value='.$_POST['mid_initial'][$i].' /></td><td><b>Last Name*</b><input class="author_item" type ="text" name ="last_name[]" size ="27" id="ln" value='.$_POST['last_name'][$i].' /></td><td><a href="javascript:void;" onClick="removeFormField('.$i.');">Remove</a></td></tr>';
             }
                 /*//echo '<tr id ="'.$i.'"><td><b>Coauthor'.$i.'</b></td><td><b>First Name*</b><input type ="text" name ="first_name[]" size ="27" id="fn" value="<?php echo ($_POST['first_name']['.$i.']); ?>" /></td><td><b>Middle Inital</b><input type ="text" name ="mid_initial[]" size ="10" id="mi" value="<?php echo ($_POST['mid_initial']['.$i.']); ?>"/></td><td><b>Last Name*</b><input type ="text" name ="last_name[]" size ="27" id="ln" value="<?php echo ($_POST['last_name']['.$i.']); ?>"/></td><td><a href="javascript:void;" onClick="removeFormField('.$i.');">Remove</a></td></tr>';
             }
@@ -181,27 +181,11 @@ if($_POST)
 </form>
 <script>
 var counter = <?php if (count($_POST['first_name']) == 0) echo 1; else echo count($_POST['first_name']);  ?>;
-function removeFormField(id) {
-    //delete item and update co-author's list
-   // alert(id);
+function removeFormField(id)
+{
    counter--; //to counteract the increase in counter after #adder counter++
     $('#'+id).remove(); //remove what I need to
-  //  var temp_count = counter; // how many values i had in my "list"
-  //  counter--; //reduce counter due to deleting a row (2 lines above)
-  //  var to_add = 0;
-  //  for (i=id+1; i<=temp_count; i++){ //from the row infront of what i deleted
-  //      $('#'+i).remove();
-  //      counter--;
-  //  }
-   // alert (counter);
-    //alert (temp_count);
-   // to_add = counter; //how many rows should i add?
-    //alert (to_add);
-    //for (i=(to_add+1);i<=temp_count-1; i++){
-     //   $("#authors_insert").before('<tr id ="'+i+'"><td><b>Coauthor'+i+'</b></td><td><b>First Name* </b><input type ="text" name ="first_name[]" size ="27" id="fn" value="<?php echo $_POST['first_name'][i]; ?>" /></td><td><b>Middle Inital</b></b><input type ="text" name ="mid_initial" size ="10" id="mi" value = "<?php echo $_POST['mid_initial']['+i+']; ?>" /></td><td><b>Last Name*</b><input type ="text" name ="last_name[]" size ="27" id="ln" value= "<?php echo $_POST['last_name']['+i+']; ?>" /></td><td><a href="javascript:void;" onClick="removeFormField('+i+');">Remove</a></td></tr>');
-     //   counter++;
-   // }
-  //  counter++; //reset counter to what it would have been in the add function
+  
 }
 
 $("#adder").click(function()
@@ -212,7 +196,7 @@ $("#adder").click(function()
 
 $(".author_item").blur(function()
 {
-    $("#auto_author").load("get_similar_authors.php?firstname=Late&lastname=hhhhj");
+    $("#auto_author").load("get_similar_authors.php?firstname="+$(this).parents("tr").find("input").get(0).value+"&lastname="+$(this).parents("tr").find("input").get(2).value);
 });
 
 </script>
