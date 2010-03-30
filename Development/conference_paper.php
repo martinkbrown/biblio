@@ -6,8 +6,6 @@
  * Author: Sherene Campbell
  */
 
-print_r($_POST);
-
 require_once 'header.php';
 require_once LIB . 'Grid.php';
 require_once LIB . 'RecaptchaSettings.php';
@@ -17,11 +15,12 @@ require_once 'jquery_autocomplete_lib.php';
 require_once FRONT_END . OBJECTS . 'ConferenceMeeting.php';
 require_once FRONT_END . OBJECTS . 'ConferencePaper.php';
 require_once FRONT_END . OBJECTS . 'AuthorConferencePaper.php';
+require_once FRONT_END . OBJECTS . 'ConferenceSession.php';
 require_once FRONT_END . OBJECTS . 'Author.php';
 require_once('recaptcha/recaptchalib.php');
 
 $recaptchaSettings = new RecaptchaSettings();
-
+$conference_session = new ConferenceSession();
 $author = new Author();
 $conf_id = $_GET['conf_meet_id'];
 $conf_meeting = new ConferenceMeeting();
@@ -31,7 +30,7 @@ $conference_paper = new ConferencePaper();
 $author_conf = new AuthorConferencePaper($author->getId(),$conference_paper->getId());
 $ff = new FormValidator();
 $ff->isValidCaptcha($recaptchaSettings->private_key);
-$conf_id = $_GET['conference_id'];
+//$conf_id = $_GET['conference_id'];
 
 echo "<h2>Add a Conference Paper</h2>";
 echo "<h4>Fields marked with * are required</h4>";
@@ -41,10 +40,10 @@ if($_POST)
 {
     $fv = new FormValidator();
     $count = count($_POST['first_name']);        
-    echo $count;
+    //echo $count;
     //for ($i=0; $i <$count; $i++){
     //      echo ($_POST['first_name'][0]);
-   // }
+    // }
     foreach($_POST['first_name'] as $key=>$value){
         //echo $value;
         $fv->violatesDbConstraints('author','firstname', $value, 'First Name');
@@ -68,13 +67,13 @@ if($_POST)
         $fv->isEmailAddress("email", $conference_paper->getFormValue('email'), "Email");
     }
 
-   // $flag_recapcha = true;
- //   if($ff->hasErrors())
-  //  {
-  //      $flag_recapcha = false;
-   //     $ff->listErrors();
-  //  }
-    if(($fv->hasErrors() || ($check_email == false || ($flag_recapcha==false))))
+   /* $flag_recapcha = true;
+    if($ff->hasErrors())
+    {
+        $flag_recapcha = false;
+        $ff->listErrors();
+    }*/
+    if(($fv->hasErrors() || ($check_email == false)))// || ($flag_recapcha==false))))
     {
         $fv->listErrors();
     }
@@ -85,12 +84,20 @@ if($_POST)
         $conference_paper->setValue('end_page',$conference_paper->getFormValue('end_pg'));
         $conference_paper->setValue('email',$conference_paper->getFormValue('email'));
         $conference_paper->setValue('approved',0);
+        $conference_paper->setValue('conference_meeting_id', $conf_id);
+        $conference_paper->setValue('conference_session_id', $conference_session->getId());
+        $conference_session->setValue('conference_meeting_id', $conf_id);
         $count = count($_POST['first_name']);
         for ($i=0; $i <$count; $i++){
+            //if ($i==0) {$author_conf->setValue('main_author', '1');}
+            //else {$author_conf->setValue('main_author', '0');}
+            $author = new Author();
             $author->setValue('firstname', $_POST['first_name'][$i]);
-            $author->setValue('initial', $_POST['$mid_initial'][$i]);
-            $author->setValue('lastname', $_POST['$last_name'][$i]);
+            $author->setValue('initial', $_POST['mid_initial'][$i]);
+            $author->setValue('lastname', $_POST['last_name'][$i]);
+            $conference_paper->addAuthor($author);
         }
+        $conference_paper->save();
         $util = new Utilities();
         $util->redirect("submit_verify.php");
     }
@@ -127,7 +134,7 @@ if($_POST)
             $counter = count($_POST['first_name']);
             //echo $counter;
             for ($i=1;$i<$counter;$i++){
-                echo '<tr id ="'.$i.'"><td><b>Coauthor'.$i.'</b></td><td><b>First Name*</b><input type ="text" name ="first_name[]" size ="27" id="fn" value ='.$_POST['first_name'][$i].' /></td><td><b>Middle Inital</b><input type ="text" name ="mid_initial[]" size ="10" id="mi" value='.$_POST['mid_initial'][$i].' /></td><td><b>Last Name*</b><input type ="text" name ="last_name[]" size ="27" id="ln" value='.$_POST['last_name'][$i].' /></td><td><a href="javascript:void;" onClick="removeFormField('.$i.');">Remove</a></td></tr>';
+                echo '<tr id ="'.$i.'"><td><b>Coauthor </b></td><td><b>First Name*</b><input type ="text" name ="first_name[]" size ="27" id="fn" value ='.$_POST['first_name'][$i].' /></td><td><b>Middle Inital</b><input type ="text" name ="mid_initial[]" size ="10" id="mi" value='.$_POST['mid_initial'][$i].' /></td><td><b>Last Name*</b><input type ="text" name ="last_name[]" size ="27" id="ln" value='.$_POST['last_name'][$i].' /></td><td><a href="javascript:void;" onClick="removeFormField('.$i.');">Remove</a></td></tr>';
             }
                 /*//echo '<tr id ="'.$i.'"><td><b>Coauthor'.$i.'</b></td><td><b>First Name*</b><input type ="text" name ="first_name[]" size ="27" id="fn" value="<?php echo ($_POST['first_name']['.$i.']); ?>" /></td><td><b>Middle Inital</b><input type ="text" name ="mid_initial[]" size ="10" id="mi" value="<?php echo ($_POST['mid_initial']['.$i.']); ?>"/></td><td><b>Last Name*</b><input type ="text" name ="last_name[]" size ="27" id="ln" value="<?php echo ($_POST['last_name']['.$i.']); ?>"/></td><td><a href="javascript:void;" onClick="removeFormField('.$i.');">Remove</a></td></tr>';
             }
@@ -179,27 +186,27 @@ function removeFormField(id) {
    // alert(id);
    counter--; //to counteract the increase in counter after #adder counter++
     $('#'+id).remove(); //remove what I need to
-    var temp_count = counter; // how many values i had in my "list"
-    counter--; //reduce counter due to deleting a row (2 lines above)
-    var to_add = 0;
-    for (i=id+1; i<=temp_count; i++){ //from the row infront of what i deleted
-        $('#'+i).remove();
-        counter--;
-    }
+  //  var temp_count = counter; // how many values i had in my "list"
+  //  counter--; //reduce counter due to deleting a row (2 lines above)
+  //  var to_add = 0;
+  //  for (i=id+1; i<=temp_count; i++){ //from the row infront of what i deleted
+  //      $('#'+i).remove();
+  //      counter--;
+  //  }
    // alert (counter);
     //alert (temp_count);
-    to_add = counter; //how many rows should i add?
+   // to_add = counter; //how many rows should i add?
     //alert (to_add);
-    for (i=(to_add+1);i<=temp_count-1; i++){
-        $("#authors_insert").before('<tr id ="'+i+'"><td><b>Coauthor'+i+'</b></td><td><b>First Name* </b><input type ="text" name ="first_name" size ="27" id="fn" value=<?php echo $_POST['first_name'][$i] ?> /></td><td><b>Middle Inital</b></b><input type ="text" name ="mid_initial" size ="10" id="mi" value="<?php echo ($_POST['mid_initial']['+(i+1)+']); ?>" /></td><td><b>Last Name*</b><input type ="text" name ="last_name" size ="27" id="ln" value="<?php echo ($_POST['last_name']['+(i+1)+']); ?>" /></td><td><a href="javascript:void;" onClick="removeFormField('+(i+1)+');">Remove</a></td></tr>');
-        counter++;
-    }
-    counter++; //reset counter to what it would have been in the add function
+    //for (i=(to_add+1);i<=temp_count-1; i++){
+     //   $("#authors_insert").before('<tr id ="'+i+'"><td><b>Coauthor'+i+'</b></td><td><b>First Name* </b><input type ="text" name ="first_name[]" size ="27" id="fn" value="<?php echo $_POST['first_name'][i]; ?>" /></td><td><b>Middle Inital</b></b><input type ="text" name ="mid_initial" size ="10" id="mi" value = "<?php echo $_POST['mid_initial']['+i+']; ?>" /></td><td><b>Last Name*</b><input type ="text" name ="last_name[]" size ="27" id="ln" value= "<?php echo $_POST['last_name']['+i+']; ?>" /></td><td><a href="javascript:void;" onClick="removeFormField('+i+');">Remove</a></td></tr>');
+     //   counter++;
+   // }
+  //  counter++; //reset counter to what it would have been in the add function
 }
 
 $("#adder").click(function()
 {
-      $("#authors_insert").before('<tr id ="'+counter+'"><td><b>Coauthor'+counter+'</b></td><td><b>First Name*</b><input type ="text" name ="first_name[]" size ="27" id="fn" value="<?php echo ($_POST['first_name']['+counter+']); ?>" /></td><td><b>Middle Inital</b><input type ="text" name ="mid_initial[]" size ="10" id="mi" value="<?php echo ($_POST['mid_initial']['+counter+']); ?>"/></td><td><b>Last Name*</b><input type ="text" name ="last_name[]" size ="27" id="ln" value="<?php echo ($_POST['last_name']['+counter+']); ?>"/></td><td><a href="javascript:void;" onClick="removeFormField('+counter+');">Remove</a></td></tr>');
+      $("#authors_insert").before('<tr id ="'+counter+'"><td><b>Coauthor</b></td><td><b>First Name*</b><input type ="text" name ="first_name[]" size ="27" id="fn" value="<?php echo ($_POST['first_name']['+counter+']); ?>" /></td><td><b>Middle Inital</b><input type ="text" name ="mid_initial[]" size ="10" id="mi" value="<?php echo ($_POST['mid_initial']['+counter+']); ?>"/></td><td><b>Last Name*</b><input type ="text" name ="last_name[]" size ="27" id="ln" value="<?php echo ($_POST['last_name']['+counter+']); ?>"/></td><td><a href="javascript:void;" onClick="removeFormField('+counter+');">Remove</a></td></tr>');
       counter++;
 });
 
