@@ -14,7 +14,7 @@ require_once 'JournalPaper.php';
  */
 class Author extends Recordset
 {
-    var $query = "SELECT a.id, a.firstname, a.initial, a.lastname FROM author WHERE 1";
+    var $query = "SELECT a.id, a.firstname, a.initial, a.lastname FROM author a WHERE 1";
 
     var $conference_papers;
     var $journal_papers;
@@ -26,20 +26,26 @@ class Author extends Recordset
 
     function next()
     {
-        parent::next();
+        if(parent::next())
+        {
+            $this->conference_papers = new ConferencePaper();
+            $this->conference_papers->getConferencePapersByAuthor($this->getId());
+            
+            return true;
+        }
 
-        $this->conference_papers = new ConferencePaper();
-        $this->conference_papers->getConferencePapersByAuthor($this->getId());
-        
+        return false;
     }
 
     function getSimilarAuthors()
     {
-        $similar_authors = new Author($this->query . "
-                        AND a.firstname LIKE '" . $this->getValue('firstname') . "'
-                        AND a.lastname LIKE '" . $this->getValue('lastname') . "'");
+        $query = $this->query . "
+                        AND a.firstname = '" . $this->getValue('firstname') . "'
+                        AND a.lastname = '" . $this->getValue('lastname') . "'";
 
-        return $similar_authors();
+        $similar_authors = new Author($query);
+
+        return $similar_authors;
     }
 }
 ?>

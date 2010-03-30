@@ -22,8 +22,8 @@ class ConferencePaper extends Recordset {
         
     var $query = "SELECT cp.id, cp.title, cp.start_page, cp.end_page, cp.create_date, cp.email, cp.approved,
                                 cs.id as session_id, cs.name as session_name
-                                FROM (conference_paper cp, author a, author_conference_paper acp, conference_session cs)
-                                LEFT JOIN conference_session s ON cp.conference_session_id = cs.id
+                                FROM (conference_paper cp, author a, author_conference_paper acp)
+                                LEFT JOIN conference_session cs ON cp.conference_session_id = cs.id
                                 WHERE cp.id = acp.conference_paper_id AND a.id = acp.author_id  ";
 
     /**
@@ -101,7 +101,7 @@ class ConferencePaper extends Recordset {
 
         else return false;
 
-        return $this->cs->save();
+        //return $this->cs->save();
     }
 
     /**
@@ -109,7 +109,7 @@ class ConferencePaper extends Recordset {
      */
     function saveAuthors()
     {
-        $main_author = false;
+        $main_author = true;
 
         foreach($this->authors as $author)
         {
@@ -119,7 +119,9 @@ class ConferencePaper extends Recordset {
 
             $acp->setValue('author_id',$author->getId());
             $acp->setValue('conference_paper_id',$this->getId());
-            $acp->setValue('main_author',$main_author ? 0 : 1);
+            $acp->setValue('main_author',$main_author ? 1 : 0);
+
+            $main_author = false;
 
             $acp->save();
         }
