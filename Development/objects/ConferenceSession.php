@@ -13,7 +13,7 @@ class ConferenceSession extends Recordset
 {
     function ConferenceSession($id=0)
     {
-        parent::Recordset($id);
+        parent::Recordset($id,'conference_session');
     }
 }
 ?>

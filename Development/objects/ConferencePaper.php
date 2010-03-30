@@ -85,7 +85,7 @@ class ConferencePaper extends Recordset {
 
         else return false;
 
-        return $this->cs->save();
+        //return $this->cs->save();
     }
 
     /**
