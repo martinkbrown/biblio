@@ -303,7 +303,7 @@ class FormValidator
             }
             else
             {
-                    $this->addError($field,$label." is not a valid email address");
+                    $this->addError($field,"\"$value\" is not a valid email address");
                     return false;
             }
     }

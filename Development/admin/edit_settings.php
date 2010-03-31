@@ -19,11 +19,17 @@ if($_POST)
 {
     $fp = fopen($filename,'w');
 
-    foreach($keys as $key)
+    for($i = 0; $i < sizeof($keys); $i++)
     {
+        $key = $keys[$i];
+
         if($key)
         {
-            fwrite($fp,$key . "=" . $_POST[$key] . "\n");
+            fwrite($fp,$key . "=" . $_POST[$key]);
+            if($i != sizeof($keys) - 1)
+            {
+                fwrite($fp,"\n");
+            }
         }
     }
 
