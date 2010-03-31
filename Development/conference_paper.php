@@ -38,7 +38,7 @@ echo "<h4>Fields marked with * are required</h4>";
 
 
 if($_POST)
-{print_r($_POST);
+{
     $fv = new FormValidator();
     $count = count($_POST['first_name']);        
     //echo $count;
@@ -120,10 +120,10 @@ if($_POST)
             <td><b>Paper Title*</b></td>
             <td> <input type ="text" id="conf_paper" name ="paper_title" size="40" value ="<?php echo $conference_paper->getFormValue('paper_title');?>" /></td>
         </tr>
-        <tr>
+        <tr id="similar_authors_row">
             <td><b>Authors</b></td> <td id="similar_authors" colspan="3"> </td>
         </tr>
-        <tr class="author_row">
+        <tr class="author_row" id="0">
             <td class="author_label"><b>Main Author</b></td>
             <td><b>First Name*</b><input id="test" class="author_item" type ="text" name ="first_name[]" size ="27" value="<?php echo ($_POST['first_name'][0]); ?>"/></td>
             <td><b>Middle Inital</b><input class="author_item" type ="text" name ="mid_initial[]" size ="10" id="mi" value="<?php echo ($_POST['mid_initial'][0]); ?>"/></td>
@@ -135,7 +135,7 @@ if($_POST)
             $counter = count($_POST['first_name']);
             //echo $counter;
             for ($i=1;$i<$counter;$i++){
-                echo '<tr id ="'.$i.'"><td class="author_label"><b>Coauthor </b></td><td><b>First Name*</b><input class="author_item" type ="text" name ="first_name[]" size ="27" id="fn" value ='.$_POST['first_name'][$i].' /></td><td><b>Middle Inital</b><input type ="text" name ="mid_initial[]" size ="10" id="mi" value='.$_POST['mid_initial'][$i].' /></td><td><b>Last Name*</b><input class="author_item" type ="text" name ="last_name[]" size ="27" id="ln" value='.$_POST['last_name'][$i].' /></td><td><a href="javascript:;" onClick="removeFormField('.$i.');">Remove</a></td></tr>';
+                echo '<tr class="author_row" id ="'.$i.'"><td class="author_label"><b>Coauthor </b></td><td><b>First Name*</b><input class="author_item" type ="text" name ="first_name[]" size ="27" id="fn" value ='.$_POST['first_name'][$i].' /></td><td><b>Middle Inital</b><input type ="text" name ="mid_initial[]" size ="10" id="mi" value='.$_POST['mid_initial'][$i].' /></td><td><b>Last Name*</b><input class="author_item" type ="text" name ="last_name[]" size ="27" id="ln" value='.$_POST['last_name'][$i].' /></td><td><a href="javascript:;" onClick="removeFormField('.$i.');">Remove</a></td></tr>';
             }
                 /*//echo '<tr id ="'.$i.'"><td><b>Coauthor'.$i.'</b></td><td><b>First Name*</b><input type ="text" name ="first_name[]" size ="27" id="fn" value="<?php echo ($_POST['first_name']['.$i.']); ?>" /></td><td><b>Middle Inital</b><input type ="text" name ="mid_initial[]" size ="10" id="mi" value="<?php echo ($_POST['mid_initial']['.$i.']); ?>"/></td><td><b>Last Name*</b><input type ="text" name ="last_name[]" size ="27" id="ln" value="<?php echo ($_POST['last_name']['.$i.']); ?>"/></td><td><a href="javascript:void;" onClick="removeFormField('.$i.');">Remove</a></td></tr>';
             }
@@ -182,18 +182,27 @@ if($_POST)
 </form>
 <script>
 var counter = <?php if (count($_POST['first_name']) == 0) echo 1; else echo count($_POST['first_name']);  ?>;
+var main_author = $("#0").clone();
 
 function removeFormField(id)
 {
    //counter--;
    //to counteract the increase in counter after #adder counter++
     $('#'+id).remove(); //remove what I need to
+    if($(".author_row").size() == 0)
+    {
+        var aclone = $(main_author).clone();
+        //$(aclone).attr("id",counter++);
+        $("#similar_authors_row").after(main_author);
+    }
+
+    setAuthorBlur();
   
 }
 
 $("#adder").click(function()
 {
-      $("#authors_insert").before('<tr id ="'+counter+'"><td class="author_label"><b>Coauthor</b></td><td><b>First Name*</b><input class="author_item" type ="text" name ="first_name[]" size ="27" id="fn" value="<?php echo ($_POST['first_name']['+counter+']); ?>" /></td><td><b>Middle Inital</b><input class="author_item" type ="text" name ="mid_initial[]" size ="10" id="mi" value="<?php echo ($_POST['mid_initial']['+counter+']); ?>"/></td><td><b>Last Name*</b><input class="author_item" type ="text" name ="last_name[]" size ="27" id="ln" value="<?php echo ($_POST['last_name']['+counter+']); ?>"/></td><td><a href="javascript:;" onClick="removeFormField('+counter+');">Remove</a></td></tr>');
+      $("#authors_insert").before('<tr class="author_row" id ="'+counter+'"><td class="author_label"><b>Coauthor</b></td><td><b>First Name*</b><input class="author_item" type ="text" name ="first_name[]" size ="27" id="fn" value="<?php echo ($_POST['first_name']['+counter+']); ?>" /></td><td><b>Middle Inital</b><input class="author_item" type ="text" name ="mid_initial[]" size ="10" id="mi" value="<?php echo ($_POST['mid_initial']['+counter+']); ?>"/></td><td><b>Last Name*</b><input class="author_item" type ="text" name ="last_name[]" size ="27" id="ln" value="<?php echo ($_POST['last_name']['+counter+']); ?>"/></td><td><a href="javascript:;" onClick="removeFormField('+counter+');">Remove</a></td></tr>');
       counter++;
       setAuthorBlur();
 });
