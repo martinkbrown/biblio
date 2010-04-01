@@ -69,12 +69,12 @@ if($_POST)
         $fv->isEmailAddress("email", $conference_paper->getFormValue('email'), "Email");
     }
 
-   /* $flag_recapcha = true;
+    $flag_recapcha = true;
     if($ff->hasErrors())
     {
         $flag_recapcha = false;
         $ff->listErrors();
-    }*/
+    }
     if(($fv->hasErrors() || ($check_email == false)))// || ($flag_recapcha==false))))
     {
         $fv->listErrors();
@@ -174,7 +174,7 @@ if($_POST)
         <tr>
             <td></td>
             <td>
-                    <?php //echo recaptcha_get_html($recaptchaSettings->public_key, $error);?>
+                    <?php echo recaptcha_get_html($recaptchaSettings->public_key, $error);?>
             </td>
         </tr>
         <tr>
