@@ -176,7 +176,10 @@ if($_POST)
             }
 
             $util = new Utilities();
-            $util->redirect("submit_verify.php");
+            if ($flag_conf_exsist == false){
+                $util->redirect("submit_verify.php?submit_id=1");
+            }else
+                $util->redirect("submit_verify.php?submit_id=2");
     }
 }
 

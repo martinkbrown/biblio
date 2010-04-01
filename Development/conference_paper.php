@@ -20,6 +20,7 @@ require_once FRONT_END . OBJECTS . 'Author.php';
 require_once('recaptcha/recaptchalib.php');
 require_once 'jquery_timer_lib.php';
 
+        
 $recaptchaSettings = new RecaptchaSettings();
 $conference_session = new ConferenceSession();
 $author = new Author();
@@ -98,9 +99,13 @@ if($_POST)
             $author->setValue('lastname', $_POST['last_name'][$i]);
             $conference_paper->addAuthor($author);
         }
+        $getdate = getdate();
+        $submit_date = $getdate[0]; //unix timestamp
+        //echo  $submit_date;
+        $conference_paper->setValue('create_date', $submit_date);
         $conference_paper->save();
         $util = new Utilities();
-        $util->redirect("submit_verify.php");
+        $util->redirect("submit_verify.php?submit_id=3");
     }
 }
 ?>
@@ -137,7 +142,7 @@ if($_POST)
             for ($i=1;$i<$counter;$i++){
                 echo '<tr class="author_row" id ="'.$i.'"><td class="author_label"><b>Coauthor </b></td><td><b>First Name*</b><input class="author_item" type ="text" name ="first_name[]" size ="27" id="fn" value ='.$_POST['first_name'][$i].' /></td><td><b>Middle Inital</b><input type ="text" name ="mid_initial[]" size ="10" id="mi" value='.$_POST['mid_initial'][$i].' /></td><td><b>Last Name*</b><input class="author_item" type ="text" name ="last_name[]" size ="27" id="ln" value='.$_POST['last_name'][$i].' /></td><td><a href="javascript:;" onClick="removeFormField('.$i.');">Remove</a></td></tr>';
             }
-                /*//echo '<tr id ="'.$i.'"><td><b>Coauthor'.$i.'</b></td><td><b>First Name*</b><input type ="text" name ="first_name[]" size ="27" id="fn" value="<?php echo ($_POST['first_name']['.$i.']); ?>" /></td><td><b>Middle Inital</b><input type ="text" name ="mid_initial[]" size ="10" id="mi" value="<?php echo ($_POST['mid_initial']['.$i.']); ?>"/></td><td><b>Last Name*</b><input type ="text" name ="last_name[]" size ="27" id="ln" value="<?php echo ($_POST['last_name']['.$i.']); ?>"/></td><td><a href="javascript:void;" onClick="removeFormField('.$i.');">Remove</a></td></tr>';
+            /*//echo '<tr id ="'.$i.'"><td><b>Coauthor'.$i.'</b></td><td><b>First Name*</b><input type ="text" name ="first_name[]" size ="27" id="fn" value="<?php echo ($_POST['first_name']['.$i.']); ?>" /></td><td><b>Middle Inital</b><input type ="text" name ="mid_initial[]" size ="10" id="mi" value="<?php echo ($_POST['mid_initial']['.$i.']); ?>"/></td><td><b>Last Name*</b><input type ="text" name ="last_name[]" size ="27" id="ln" value="<?php echo ($_POST['last_name']['.$i.']); ?>"/></td><td><a href="javascript:void;" onClick="removeFormField('.$i.');">Remove</a></td></tr>';
             }
             /$count = count($_POST['first_name']);
             //for (i=1;i<count;i++){
