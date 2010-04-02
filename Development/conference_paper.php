@@ -19,6 +19,7 @@ require_once FRONT_END . OBJECTS . 'ConferenceSession.php';
 require_once FRONT_END . OBJECTS . 'Author.php';
 require_once('recaptcha/recaptchalib.php');
 require_once 'jquery_timer_lib.php';
+require_once 'jquery_blockui_lib.php';
 
         
 $recaptchaSettings = new RecaptchaSettings();
@@ -186,19 +187,23 @@ if($_POST)
     </table>
 </form>
 <script>
+
 var counter = <?php if (count($_POST['first_name']) == 0) echo 1; else echo count($_POST['first_name']);  ?>;
-var main_author = $("#0").clone();
+
+var main_author = $("#0").clone().get(0);
 
 function removeFormField(id)
 {
    //counter--;
    //to counteract the increase in counter after #adder counter++
-    $('#'+id).remove(); //remove what I need to
-    if($(".author_row").size() == 0)
+    if(id == 0)
     {
-        var aclone = $(main_author).clone();
-        //$(aclone).attr("id",counter++);
-        $("#similar_authors_row").after(main_author);
+        $('#'+id).remove();
+        $("#similar_authors_row").after($(main_author).clone().get(0));
+    }
+    else
+    {
+        $('#'+id).remove(); //remove what I need to
     }
 
     setAuthorBlur();
@@ -217,8 +222,11 @@ var tr = null;
 
 function getSimilarAuthors()
 {
-    firstname = $(this).parents("tr").find("input").get(0).value;
-    lastname = $(this).parents("tr").find("input").get(2).value;
+    var firstname = $(this).parents("tr").find("input").get(0).value;
+    var lastname = $(this).parents("tr").find("input").get(2).value;
+
+    if($.trim(firstname) == "" || $.trim(lastname) == "") return;
+
     var ids = "";
 
     $(".author_ids").each(function()
@@ -227,7 +235,20 @@ function getSimilarAuthors()
     });
 
     var text;
+    var it = this;
+
     results = 0;
+
+    $.blockUI({ css: {
+        border: 'none',
+        padding: '15px',
+        backgroundColor: '#000',
+        '-webkit-border-radius': '10px',
+        '-moz-border-radius': '10px',
+        opacity: .5,
+        color: '#fff'
+    } });
+
     $.ajax(
     {
         type:"GET",
@@ -267,7 +288,7 @@ function getSimilarAuthors()
 
                     if(!got_paper) return;
                     else results++;
-                    
+
                     got_paper = false;
                     paper = "";
 
@@ -275,44 +296,53 @@ function getSimilarAuthors()
 
                     text += "<span><br/>";
 
-                    $("#similar_authors").html($("#similar_authors").html()+text);
+                    $("#similar_authors").hide().fadeIn("slow").html($("#similar_authors").html()+text);
 
             });
+
+            if(results > 0)
+            {
+                var ival = window.setInterval(function()
+                {
+
+
+                    if($(".similar_authors").size() == results)
+                    {
+                        window.clearInterval(ival);
+                        $.unblockUI();
+
+                        $(".similar_authors").click(function()
+                        {
+                            $("#similar_authors").html("");
+                            var newHTML = "";
+                            var oldHTML = "";
+
+                            if(tr==null)
+                            {
+                                tr = $(it).parents("tr");
+                            }
+
+                            var name = $(this).html();
+
+                            oldHTML = $(it).parents("tr").html();
+
+                            $(it).parents("tr").find("td[class!='author_label']").remove();
+
+                            newHTML = '<td><input class="author_ids" type="hidden" name="author_id[]" value="'+($(this).attr('id').substring(2))+'">'+name+"</input></td><td class=\"author_label\"><a href=\"javascript:;\" onClick=\"removeFormField('"+($(tr).attr('id'))+"');\">Remove</a></td>";
+
+                            $(tr).append(newHTML);
+                        });
+                    }
+                },100);
+            }
+            else
+            {
+                $.unblockUI();
+            }
 
         }
     });
-
-    var it = this;
-
-    var ival = window.setInterval(function()
-    {
-        if($(".similar_authors").size() == results || results == 0)
-        {
-            window.clearInterval(ival);
-
-            $(".similar_authors").click(function()
-            {
-                $("#similar_authors").html("");
-                var newHTML = "";
-                var oldHTML = "";
-
-                if(tr==null)
-                {
-                    tr = $(it).parents("tr");
-                }
-
-                var name = $(this).html();
-
-                oldHTML = $(it).parents("tr").html();
-
-                $(it).parents("tr").find("td[class!='author_label']").remove();
-                
-                newHTML = '<td><input class="author_ids" type="hidden" name="author_id[]" value="'+($(this).attr('id').substring(2))+'">'+name+"</input></td><td class=\"author_label\"><a href=\"javascript:;\" onClick=\"removeFormField('"+($(tr).attr('id'))+"');\">Remove</a></td>";
-
-                $(tr).append(newHTML);
-            });
-        }
-    },500);
+    
 }
 
 function setAuthorBlur()
