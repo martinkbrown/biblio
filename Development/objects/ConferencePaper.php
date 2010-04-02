@@ -47,7 +47,7 @@ class ConferencePaper extends Recordset {
         parent::Recordset($this->query . " AND cp.id = '$id'","conference_paper");
     }
 
-    function getConferencePapersByAuthor($author_id)
+    function getConferencePapersByAuthorId($author_id)
     {
         $this->query .= " AND a.id = '$author_id'";
 

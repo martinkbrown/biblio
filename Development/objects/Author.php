@@ -29,7 +29,7 @@ class Author extends Recordset
         if(parent::next())
         {
             $this->conference_papers = new ConferencePaper();
-            $this->conference_papers->getConferencePapersByAuthor($this->getId());
+            $this->conference_papers->getConferencePapersByAuthorId($this->getId());
             
             return true;
         }
