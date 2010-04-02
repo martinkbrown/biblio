@@ -26,7 +26,7 @@
                     <a href="journals.php">Journals</a>
                 </td>
                 <td>
-                    <a href="#">Authors</a>
+                    <a href="authors.php">Authors</a>
                 </td>
             </tr>
         </table>

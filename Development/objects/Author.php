@@ -21,7 +21,20 @@ class Author extends Recordset
 
     function Author($id=0)
     {
-        parent::Recordset($id,"author");
+        if($id)
+        {
+            $this->query .= " AND a.id = '" . $id . "'";
+            parent::Recordset($this->query,"author");
+        }
+        else
+        {
+            parent::Recordset(0,"author");
+        }
+    }
+
+    function getFullName()
+    {
+        return $this->firstname . " " . $this->initial . " " . $this->lastname;
     }
 
     function next()
@@ -37,15 +50,17 @@ class Author extends Recordset
         return false;
     }
 
-    function getSimilarAuthors()
+    function getAuthorsByName($firstname,$lastname)
     {
-        $query = $this->query . "
-                        AND a.firstname = '" . $this->getValue('firstname') . "'
-                        AND a.lastname = '" . $this->getValue('lastname') . "'";
+        $sql =& sql();
 
-        $similar_authors = new Author($query);
+        $firstname = $sql->escape($firstname);
+        $lastname = $sql->escape($lastname);
 
-        return $similar_authors;
+        $this->query .= " AND a.firstname = '" . $firstname . "'
+                                AND a.lastname = '" . $lastname . "'";
+        
+        return $this->loadByQuery($this->query);
     }
 }
 ?>
