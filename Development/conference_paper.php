@@ -313,6 +313,8 @@ function getSimilarAuthors()
 
                         $(".similar_authors").click(function()
                         {
+                            var name = $(this).html();
+                            
                             $("#similar_authors").html("");
                             var newHTML = "";
                             var oldHTML = "";
@@ -322,13 +324,9 @@ function getSimilarAuthors()
                                 tr = $(it).parents("tr");
                             }
 
-                            var name = $(this).html();
-
-                            oldHTML = $(it).parents("tr").html();
-
                             $(it).parents("tr").find("td[class!='author_label']").remove();
-
-                            newHTML = '<td><input class="author_ids" type="hidden" name="author_id[]" value="'+($(this).attr('id').substring(2))+'">'+name+"</input></td><td class=\"author_label\"><a href=\"javascript:;\" onClick=\"removeFormField('"+($(tr).attr('id'))+"');\">Remove</a></td>";
+                            
+                            newHTML = '<td><input class="author_ids" type="hidden" name="author_id[]" value="'+($(this).attr('id').substring(2))+'"/>'+name+"</td><td class=\"author_label\"><a href=\"javascript:;\" onClick=\"removeFormField('"+($(tr).attr('id'))+"');\">Remove</a></td>";
 
                             $(tr).append(newHTML);
                         });
