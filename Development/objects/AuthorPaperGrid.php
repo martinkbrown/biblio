@@ -11,7 +11,28 @@ require_once FRONT_END . LIB . 'Grid.php';
  */
 class AuthorPaperGrid extends Grid
 {
-    //put your code here
+    var $current_year;
+
+    function handle_year($row)
+    {
+        $year = date("Y",$row['date']);
+        $title = $row['title'];
+        $pages = $row['start_page'] . " - " . $row['end_page'];
+        $source = $row['source_name'];
+        $cm_id = $row['conference_meeting_id'];
+
+        if($this->current_year != $year)
+        {
+            $this->current_year = $year;
+            $year = "<b>" . $year . "</b><br/>";
+        }
+        else
+        {
+            $year = "";
+        }
+        
+        return "$year \"$title\"<br/><a href=\"conference_meeting_toc.php?conference_meeting_id=$cm_id\">$source</a> pages $pages<br/><br/>";
+    }
 }
 
 ?>

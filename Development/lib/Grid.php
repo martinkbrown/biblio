@@ -150,6 +150,11 @@ class Grid {
      */
     function createGridFromRecordset($recordset)
     {
+        return $this->createGridFromArray($this->createArrayFromRecordset($recordset));
+    }
+
+    function createArrayFromRecordset($recordset)
+    {
         if($recordset->id)
         {
             $array = array();
@@ -180,7 +185,7 @@ class Grid {
             }while($recordset->next());
         }
 
-        return $this->createGridFromArray($array);
+        return $array;
     }
 
     /**
