@@ -246,7 +246,8 @@ function getSimilarAuthors()
         '-webkit-border-radius': '10px',
         '-moz-border-radius': '10px',
         opacity: .5,
-        color: '#fff'
+        color: '#fff',
+        message: 'Searching'
     } });
 
     $.ajax(
@@ -254,6 +255,10 @@ function getSimilarAuthors()
         type:"GET",
         url:"get_similar_authors.php?firstname="+firstname+"&lastname="+lastname+ids,
         dataType:"xml",
+        complete:function()
+        {
+            $.unblockUI();
+        },
         success:function(xml)
         {
             tr = null;
