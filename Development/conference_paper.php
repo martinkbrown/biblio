@@ -239,16 +239,19 @@ function getSimilarAuthors()
 
     results = 0;
 
-    $.blockUI({ css: {
-        border: 'none',
-        padding: '15px',
-        backgroundColor: '#000',
-        '-webkit-border-radius': '10px',
-        '-moz-border-radius': '10px',
-        opacity: .5,
-        color: '#fff',
-        message: 'Searching'
-    } });
+    $.blockUI(
+    { css:
+            {
+                border: 'none',
+                padding: '15px',
+                backgroundColor: '#000',
+                '-webkit-border-radius': '10px',
+                '-moz-border-radius': '10px',
+                opacity: .5,
+                color: '#fff'
+            },
+       message: 'Searching for matching authors...'
+    });
 
     $.ajax(
     {
