@@ -29,14 +29,11 @@ $journal = new Journal();
 $grid = new JournalGrid();
 if ($_GET) {
     $jname = $_GET['journal_name'];
-    // May not be necessary
-//    if ($jname == "") {
-//        $journal->loadApprovedJournals();
-//    } else {
+
     // Loading approved journals by keyword
     $journal->loadApprovedJournals();
     $journal->loadJournalsByKeyword($_GET['journal_name']);
-//    }
+
     $grid->setColumnTitle("_name","Name of Journal");
     $grid->createGridFromRecordset($journal);
     echo $grid->getGrid();
