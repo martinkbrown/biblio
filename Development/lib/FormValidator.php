@@ -18,6 +18,21 @@ class FormValidator
     var $errors = array();
 
     var $messages = array();
+    /**
+     * Function checks that the value is a number or not. If not, false is returned and an error message is added
+     * to the messaging queue using addError function.
+     * @param <type> $label name of the label where that data is to be entered
+     * @param <type> $value the actual data to be tested
+     * @return <type> bool - true if value can be evaluated as a number, false if otherwise
+     */
+function isANumber($label,  $value) {
+   if (is_numeric($value)){
+       return true;
+   }else{
+       $this->addError($label, $label." must be a number");
+       return false;
+   }
+}
 
     /**
      * Links an error to a specific field in a form

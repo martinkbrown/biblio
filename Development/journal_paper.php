@@ -17,7 +17,6 @@ require_once('recaptcha/recaptchalib.php');
 $j_id = $_GET['journal_id'];
 $journal = new Journal($j_id);
 $j_name_display = $journal->getValue("name");
-$j_acroynm_display = $journal->getValue("acronym");
 
 ?>
 
@@ -39,7 +38,17 @@ if ($_POST) {
     $fv->isNull($_POST['journal_paper_startpg'], 'Start Page');
     $fv->isNull($_POST['journal_paper_endpg'], 'End Page');
     $fv->isNull($_POST['journal_volume'], 'Volume');
-        $fv->isNull($_POST['journal_date'], 'Date');
+    $fv->isNull($_POST['journal_date'], 'Date');
+
+    // Check if violates DB Contraints
+    $fv->violatesDbConstraints('journal_paper', 'title', $_POST['journal_paper_title'], 'Title');
+    $fv->violatesDbConstraints('journal_paper', 'start_page', $_POST['journal_paper_startpg'], 'Start Page');
+    $fv->violatesDbConstraints('journal_paper', 'end_page', $_POST['journal_paper_endpg'], 'End Page');
+    $fv->violatesDbConstraints('journal_paper', 'volume', $_POST['journal_paper_volume'], 'Volume');
+    if ($_POST['journal_number']) {
+        $fv->isANumber('Number', $_POST['journal_number']);
+        $fv->violatesDbConstraints('journal_paper', 'number', $_POST['journal_number'], 'Number');
+    }
 
     $fv->isValidCaptcha($recaptchaSettings->private_key);
 
@@ -47,7 +56,7 @@ if ($_POST) {
     if ($fv->isEqual($_POST['user_email'], $_POST['user_conf_email'], 'Confirm Email',"Email addresses do not match")) {
         $fv->isEmailAddress($email, $_POST['user_email'], 'Your email');
         $fv->isNull($_POST['user_email'], 'Your email');
-        $fv->violatesDbConstraints('journal', 'email',$_POST['user_email'] ,'Your Email');
+        $fv->violatesDbConstraints('journal_paper', 'email',$_POST['user_email'] ,'Your Email');
     }
 
     // If errors exist, inform user else save data and display confirmation page
@@ -55,24 +64,31 @@ if ($_POST) {
         $fv->listErrors();
     } else {
         // Save Form Data
-        $journal = new Journal();
-        $journal->setValue('name', $_POST['journal_name']);
-        $journal->setValue('acronym', $_POST['journal_acnym']);
-        $journal->setValue('approved', 0);
-        $journal->setValue('email',$_POST['user_email']);
-        $journal->setValue('create_date', mktime());
+        $journal_paper = new JournalPaper();
+        $journal_paper->setValue('journal_id', $j_id);
+        $journal_paper->setValue('title', $_POST['journal_paper_title']);
+        $journal_paper->setValue('start_page', $_POST['journal_paper_startpg']);
+        $journal_paper->setValue('end_page', $_POST['journal_paper_endpg']);
+        $journal_paper->setValue('create_date', $_POST['journal_paper_endpg']);
+        $journal_paper->setValue('approved', 0);
+        $journal_paper->setValue('volume',$_POST['journal_volume']);
+        if ($_POST['journal_number']) {
+            $journal_paper->setValue('number', $_POST['journal_number']);
+        }
+        $journal_paper->setValue('email',$_POST['user_email']);
+        $journal_paper->setValue('create_date', mktime());
 
-        if($journal->save()) {
+        if($journal_paper->save()) {
             $fv->addMessage("name", "Great! Journal Entry Saved");
             $fv->listMessages();
         } else {
-            $fv->addError("name","There was an error saving this Journal entry");
+            $fv->addError("name","There was an error saving this Journal Paper");
             $fv->listErrors();
         }
 
         // Display confirmation page
         $util = new Utilities();
-        $util->redirect("submit_journal_verify.php");
+        $util->redirect("submit_journal_paper_confirm.php");
 
     }
 }
@@ -80,7 +96,7 @@ if ($_POST) {
 ?>
 <h2>Add a Journal Paper</h2>
 Fields marked with * are required <br>
-<form name ="frm_name" method ="POST">
+<form name ="frm_name" action="confirm_journal_paper_submit.php" method ="POST">
     <table>
         <tr>
             <td>Journal Name*</td>
@@ -167,7 +183,7 @@ Fields marked with * are required <br>
             </td>
             <td></td><td></td>
         </tr>
-         <tr>
+        <tr>
             <td></td>
             <td>
                 <?php echo recaptcha_get_html($recaptchaSettings->public_key, $error);?>
