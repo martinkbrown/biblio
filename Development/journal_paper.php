@@ -12,6 +12,8 @@ require_once 'jquery_lib.php';
 require_once 'jquery_calendar_lib.php';
 require_once 'jquery_autocomplete_lib.php';
 require_once('recaptcha/recaptchalib.php');
+require_once 'jquery_timer_lib.php';
+require_once 'jquery_blockui_lib.php';
 
 // Getting Journal ID from previous page
 $j_id = $_GET['journal_id'];
@@ -52,6 +54,7 @@ if ($_POST) {
         $fv->isANumber('Number', $_POST['journal_number']);
         $fv->violatesDbConstraints('journal_paper', 'number', $_POST['journal_number'], 'Number');
     }
+
     $fv->violatesDbConstraints('author','firstname', $_POST['journal_first_name[0]'], 'First Name');
     $fv->violatesDbConstraints('author','initial',$_POST['journal_middle_init[0]'],$_POST['journal_middle_init[0]']);
     $fv->violatesDbConstraints('author','lastname',$_POST['journal_last_name[0]'],$_POST['journal_last_name[0]']);
@@ -137,7 +140,7 @@ if ($_POST) {
 ?>
 <h2>Add a Journal Paper</h2>
 Fields marked with * are required <br>
-<form name ="frm_name" action="confirm_journal_paper_submit.php" method ="POST">
+<form name ="frm_name" method ="POST">
     <table>
         <tr>
             <td>Journal Name*</td>
@@ -157,24 +160,35 @@ Fields marked with * are required <br>
         </tr>
         <tr>
             <td>Authors</td>
-            <td></td>
+            <td id="similar_authors" colspan="3"> </td>
             <td></td>
             <td></td>
         </tr>
         <br>
-        <tr>
-            <td>Main Author*</td>
+        <tr class="author_row" id="0">
+            <td class="author_label">Main Author*</td>
             <td>First Name*
-                <input type= "text" name= "journal_first_name[]" size="33" value="<?php echo $_POST ['journal_first_name'][0] ?>"/>
+                <input class="author_item"  type= "text" name= "journal_first_name[]" size="33" value="<?php echo $_POST ['journal_first_name'][0] ?>"/>
             </td>
             <td> Middle Initial*
-                <input type= "text" name= "journal_middle_init[]" size="1" value="<?php echo $_POST ['journal_middle_init'][0] ?>"/>
+                <input class="author_item" type= "text" name= "journal_middle_init[]" size="1" value="<?php echo $_POST ['journal_middle_init'][0] ?>"/>
             </td>
             <td> Last Name*
-                <input type= "text" name= "journal_last_name[]" size="30" value="<?php echo $_POST ['journal_last_name'][0] ?>"/>
+                <input class="author_item" type= "text" name= "journal_last_name[]" size="30" value="<?php echo $_POST ['journal_last_name'][0] ?>"/>
             </td>
         </tr>
-        <tr><td></td><td> <a href="index.php">Click here to add another author</a></td>
+         <tr>
+            <td>
+        <?php
+            $counter = count($_POST['first_name']);
+            //echo $counter;
+            for ($i=1;$i<$counter;$i++){
+                echo '<tr class="author_row" id ="'.$i.'"><td class="author_label"><b>Coauthor </td><td><b>First Name*<input class="author_item" type ="text" name ="first_name[]" size ="33" id="fn" value ='.$_POST['first_name'][$i].' /></td><td><b>Middle Initial* <input type ="text" name ="mid_initial[]" size ="1" id="mi" value='.$_POST['mid_initial'][$i].' /></td><td><b>Last Name*<input class="author_item" type ="text" name ="last_name[]" size ="30" id="ln" value='.$_POST['last_name'][$i].' /></td><td><a href="javascript:;" onClick="removeFormField('.$i.');">Remove</a></td></tr>';
+            }
+         ?>
+            </td>
+        </tr>
+        <tr id="authors_insert"><td></td><td><a id="adder" href="javascript:;">Click here to add another author</a></td>
         <tr>
             <td>Start Page*</td>
             <td>
@@ -239,9 +253,177 @@ Fields marked with * are required <br>
     </table>
 </form>
 
+<script>
+
+var counter = <?php if (count($_POST['first_name']) == 0) echo 1; else echo count($_POST['first_name']);  ?>;
+
+var main_author = $("#0").clone().get(0);
+
+function removeFormField(id)
+{
+   //counter--;
+   //to counteract the increase in counter after #adder counter++
+    if(id == 0)
+    {
+        $('#'+id).remove();
+        $("#similar_authors_row").after($(main_author).clone().get(0));
+    }
+    else
+    {
+        $('#'+id).remove(); //remove what I need to
+    }
+
+    setAuthorBlur();
+
+}
+
+$("#adder").click(function()
+{
+      $("#authors_insert").before('<tr class="author_row" id ="'+counter+'"><td class="author_label">Coauthor</td><td>First Name* <input class="author_item" type ="text" name ="first_name[]" size ="33" id="fn" value="<?php echo ($_POST['first_name']['+counter+']); ?>" /></td><td>Middle Initial* <input class="author_item" type ="text" name ="mid_initial[]" size ="1" id="mi" value="<?php echo ($_POST['mid_initial']['+counter+']); ?>"/></td><td>Last Name* <input class="author_item" type ="text" name ="last_name[]" size ="30" id="ln" value="<?php echo ($_POST['last_name']['+counter+']); ?>"/></td><td><a href="javascript:;" onClick="removeFormField('+counter+');">Remove</a></td></tr>');
+      counter++;
+      setAuthorBlur();
+});
+
+var results = 0;
+var tr = null;
+
+function getSimilarAuthors()
+{
+    var firstname = $(this).parents("tr").find("input").get(0).value;
+    var lastname = $(this).parents("tr").find("input").get(2).value;
+
+    if($.trim(firstname) == "" || $.trim(lastname) == "") return;
+
+    var ids = "";
+
+    $(".author_ids").each(function()
+    {
+        ids += "&id[]=" + ($(this).val());
+    });
+
+    var text;
+    var it = this;
+
+    results = 0;
+
+    $.blockUI(
+    { css:
+            {
+                border: 'none',
+                padding: '15px',
+                backgroundColor: '#000',
+                '-webkit-border-radius': '10px',
+                '-moz-border-radius': '10px',
+                opacity: .5,
+                color: '#fff'
+            },
+       message: 'Searching for matching authors...'
+    });
+
+    $.ajax(
+    {
+        type:"GET",
+        url:"get_similar_authors.php?firstname="+firstname+"&lastname="+lastname+ids,
+        dataType:"xml",
+        complete:function()
+        {
+            $.unblockUI();
+        },
+        success:function(xml)
+        {
+            tr = null;
+            $("#similar_authors").html("");
+
+            $(xml).find('author').each(function()
+            {
+                    text = "";
+
+                    var id = $(this).find('id').text();
+                    var firstname = $(this).find('firstname').text();
+                    var initial = $(this).find('initial').text();
+                    var lastname = $(this).find('lastname').text();
+
+                    text += "<span id='suggest'>Did you mean <a id=a_"+id+" class=\"similar_authors\" href=\"javascript:;\">" + firstname + " " + initial + " " + lastname + "</a>, author of ";
+
+                    var paper;
+                    var got_paper = false;
+
+                    $(this).find('papers').each(function()
+                    {
+                        $(this).find('paper').each(function()
+                        {
+                            got_paper = true;
+                            paper = $(this).text();
+                            if(paper != "")
+                            {
+                                text +=  "<b>" + paper + ", ";
+                            }
+                        });
+                    });
+
+                    if(!got_paper) return;
+                    else results++;
+
+                    got_paper = false;
+                    paper = "";
+
+                    text = text.substring(0,text.length-2) + "?";
+
+                    text += "<span><br/>";
+
+                    $("#similar_authors").hide().fadeIn("slow").html($("#similar_authors").html()+text);
+
+            });
+
+            if(results > 0)
+            {
+                var ival = window.setInterval(function()
+                {
 
 
+                    if($(".similar_authors").size() == results)
+                    {
+                        window.clearInterval(ival);
+                        $.unblockUI();
 
+                        $(".similar_authors").click(function()
+                        {
+                            var name = $(this).html();
 
+                            $("#similar_authors").html("");
+                            var newHTML = "";
+                            var oldHTML = "";
 
+                            if(tr==null)
+                            {
+                                tr = $(it).parents("tr");
+                            }
+
+                            $(it).parents("tr").find("td[class!='author_label']").remove();
+
+                            newHTML = '<td><input class="author_ids" type="hidden" name="author_id[]" value="'+($(this).attr('id').substring(2))+'"/>'+name+"</td><td class=\"author_label\"><a href=\"javascript:;\" onClick=\"removeFormField('"+($(tr).attr('id'))+"');\">Remove</a></td>";
+
+                            $(tr).append(newHTML);
+                        });
+                    }
+                },100);
+            }
+            else
+            {
+                $.unblockUI();
+            }
+
+        }
+    });
+
+}
+
+function setAuthorBlur()
+{
+    $(".author_item").blur(getSimilarAuthors);
+}
+
+setAuthorBlur();
+
+</script>
 

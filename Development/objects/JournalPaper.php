@@ -27,7 +27,7 @@ class JournalPaper extends Recordset
      */
     var $authors = array();
 
-    var $orderBy = " cm.start_date DESC";
+    var $orderBy = " jvn.date DESC";
 
     /**
      * You should use the methods to load the journal meetings instead

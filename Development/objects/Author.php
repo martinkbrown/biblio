@@ -43,6 +43,9 @@ class Author extends Recordset
         {
             $this->conference_papers = new ConferencePaper();
             $this->conference_papers->getConferencePapersByAuthorId($this->getId());
+
+            $this->journal_papers = new JournalPaper();
+            $this->journal_papers->getJournalPapersByAuthorId($this->getId());
             
             return true;
         }
