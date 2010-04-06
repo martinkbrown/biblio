@@ -22,7 +22,7 @@ class ConferencePaper extends Recordset {
         
     var $query = "SELECT cp.id, cp.title, cp.start_page, cp.end_page, cp.create_date, cp.email, cp.approved,
                                 cs.id as session_id, cs.name as session_name,
-                                cm.start_date as date, cm.name as source_name, cm.id as conference_meeting_id
+                                cm.start_date as `date`, cm.name as source_name, cm.id as conference_meeting_id
                                 FROM (conference_paper cp, author a, author_conference_paper acp,conference_meeting cm)
                                 LEFT JOIN conference_session cs ON cp.conference_session_id = cs.id
                                 WHERE cp.id = acp.conference_paper_id AND a.id = acp.author_id AND cp.conference_meeting_id = cm.id  ";
