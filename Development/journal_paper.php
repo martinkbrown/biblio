@@ -39,6 +39,9 @@ if ($_POST) {
     $fv->isNull($_POST['journal_paper_endpg'], 'End Page');
     $fv->isNull($_POST['journal_volume'], 'Volume');
     $fv->isNull($_POST['journal_date'], 'Date');
+    $fv->isNull($_POST['journal_first_name[0]'], 'First Name');   // Ask Martin if this is OK
+    $fv->isNull($_POST['journal_middle_init[0]'], 'Middle Initial');
+    $fv->isNull($_POST['journal_last_name[0]'], 'Last Name');
 
     // Check if violates DB Contraints
     $fv->violatesDbConstraints('journal_paper', 'title', $_POST['journal_paper_title'], 'Title');
@@ -49,9 +52,9 @@ if ($_POST) {
         $fv->isANumber('Number', $_POST['journal_number']);
         $fv->violatesDbConstraints('journal_paper', 'number', $_POST['journal_number'], 'Number');
     }
-    $fv->violatesDbConstraints('journal_paper', $field, $value, $label)('journal_first_name[0]',$_POST['journal_first_name'][0]);
-    $journal_paper->setValue('journal_middle_init[0]',$_POST['journal_middle_init'][0]);
-    $journal_paper->setValue('journal_last_name[0]',$_POST['journal_last_name'][0]);
+    $fv->violatesDbConstraints('author','firstname', $_POST['journal_first_name[0]'], 'First Name');
+    $fv->violatesDbConstraints('author','initial',$_POST['journal_middle_init[0]'],$_POST['journal_middle_init[0]']);
+    $fv->violatesDbConstraints('author','lastname',$_POST['journal_last_name[0]'],$_POST['journal_last_name[0]']);
 
     $fv->isValidCaptcha($recaptchaSettings->private_key);
 
@@ -68,6 +71,7 @@ if ($_POST) {
     } else {
         // Save Form Data
         $journal_paper = new JournalPaper();
+        $author = new Author();
         $journal_paper->setValue('journal_id', $j_id);
         $journal_paper->setValue('title', $_POST['journal_paper_title']);
         $journal_paper->setValue('start_page', $_POST['journal_paper_startpg']);
@@ -75,14 +79,21 @@ if ($_POST) {
         $journal_paper->setValue('create_date', $_POST['journal_paper_endpg']);
         $journal_paper->setValue('approved', 0);
         $journal_paper->setValue('volume',$_POST['journal_volume']);
-        $journal_paper->setValue('journal_first_name[0]',$_POST['journal_first_name'][0]);
-        $journal_paper->setValue('journal_middle_init[0]',$_POST['journal_middle_init'][0]);
-        $journal_paper->setValue('journal_last_name[0]',$_POST['journal_last_name'][0]);
+
+
+
+
         if ($_POST['journal_number']) {
             $journal_paper->setValue('number', $_POST['journal_number']);
         }
         $journal_paper->setValue('email',$_POST['user_email']);
+        // FIXME Put Date Checker
         $journal_paper->setValue('create_date', mktime());
+
+        // Saving Author
+        $author->setValue('firstname',$_POST['journal_first_name'][0]);
+        $author->setValue('initial',$_POST['journal_middle_init'][0]);
+        $author->setValue('lastname',$_POST['journal_last_name'][0]);
 
         if($journal_paper->save()) {
             $fv->addMessage("name", "Great! Journal Entry Saved");
@@ -91,7 +102,30 @@ if ($_POST) {
             $fv->addError("name","There was an error saving this Journal Paper");
             $fv->listErrors();
         }
-        $journal_paper->getId();
+        if($author->save()) {
+            $fv->addMessage("name", "Great! Author Saved");
+            $fv->listMessages();
+        } else {
+            $fv->addError("name","There was an error saving this author");
+            $fv->listErrors();
+        }
+
+        // Get IDs to create Author Journal Paper Class
+        $journal_paper_id = $journal_paper->getId();
+        $author_id = $author->getId();
+
+        // FIXME : We need a AuthorJournalPaper Class
+        $author_journal_paper = new AuthorJournalPaper();
+
+
+
+        // FIXME: We need a Journal Volume Number Class
+        // Saving Journal Volume
+        $journal_volume_number = new JournalVolumeNumber();
+
+
+
+
 
         // Display confirmation page
         $util = new Utilities();
