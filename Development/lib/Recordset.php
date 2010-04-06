@@ -508,7 +508,7 @@ class Recordset
 
         function getFormValue($field)
         {
-            return $this->formValues[$field];
+            return stripslashes($this->formValues[$field]);
         }
 }
 

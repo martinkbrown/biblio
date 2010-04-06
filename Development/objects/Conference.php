@@ -36,7 +36,7 @@ class Conference extends Recordset{
     function loadConferencesByKeyword($keyword)
     {
         $sql =& sql();
-        $keyword = $sql->escape($keyword);
+        $keyword = basename($sql->escape($keyword));
         $this->query .= " AND name REGEXP '[[:<:]]{$keyword}[[:>:]]'";
         
         $this->loadByQuery($this->query . " ORDER BY name");
