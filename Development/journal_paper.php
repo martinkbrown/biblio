@@ -49,6 +49,9 @@ if ($_POST) {
         $fv->isANumber('Number', $_POST['journal_number']);
         $fv->violatesDbConstraints('journal_paper', 'number', $_POST['journal_number'], 'Number');
     }
+    $fv->violatesDbConstraints('journal_paper', $field, $value, $label)('journal_first_name[0]',$_POST['journal_first_name'][0]);
+    $journal_paper->setValue('journal_middle_init[0]',$_POST['journal_middle_init'][0]);
+    $journal_paper->setValue('journal_last_name[0]',$_POST['journal_last_name'][0]);
 
     $fv->isValidCaptcha($recaptchaSettings->private_key);
 
@@ -72,6 +75,9 @@ if ($_POST) {
         $journal_paper->setValue('create_date', $_POST['journal_paper_endpg']);
         $journal_paper->setValue('approved', 0);
         $journal_paper->setValue('volume',$_POST['journal_volume']);
+        $journal_paper->setValue('journal_first_name[0]',$_POST['journal_first_name'][0]);
+        $journal_paper->setValue('journal_middle_init[0]',$_POST['journal_middle_init'][0]);
+        $journal_paper->setValue('journal_last_name[0]',$_POST['journal_last_name'][0]);
         if ($_POST['journal_number']) {
             $journal_paper->setValue('number', $_POST['journal_number']);
         }
@@ -85,6 +91,7 @@ if ($_POST) {
             $fv->addError("name","There was an error saving this Journal Paper");
             $fv->listErrors();
         }
+        $journal_paper->getId();
 
         // Display confirmation page
         $util = new Utilities();
@@ -124,13 +131,13 @@ Fields marked with * are required <br>
         <tr>
             <td>Main Author*</td>
             <td>First Name*
-                <input type= "text" name= "journal_first_name" size="33" value="<?php echo $_POST ['journal_first_name'] ?>"/>
+                <input type= "text" name= "journal_first_name[]" size="33" value="<?php echo $_POST ['journal_first_name'][0] ?>"/>
             </td>
             <td> Middle Initial*
-                <input type= "text" name= "journal_middle_init" size="1" value="<?php echo $_POST ['journal_middle_init'] ?>"/>
+                <input type= "text" name= "journal_middle_init[]" size="1" value="<?php echo $_POST ['journal_middle_init'][0] ?>"/>
             </td>
             <td> Last Name*
-                <input type= "text" name= "journal_last_name" size="30" value="<?php echo $_POST ['journal_last_name'] ?>"/>
+                <input type= "text" name= "journal_last_name[]" size="30" value="<?php echo $_POST ['journal_last_name'][0] ?>"/>
             </td>
         </tr>
         <tr><td></td><td> <a href="index.php">Click here to add another author</a></td>
