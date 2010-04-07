@@ -510,6 +510,43 @@ class Recordset
         {
             return stripslashes($this->formValues[$field]);
         }
+
+        function toArray()
+        {
+            if($this->id)
+            {
+                $array = array();
+
+                $haveFields = false;
+
+                $fields = array();
+
+                do
+                {
+                    $row = array();
+
+                    //prepare the array to be passed to Grid::createGridFromArray()
+                    foreach($this->getValues() as $key=>$value)
+                    {
+                        $row[$key] = $value;
+                        if(!$haveFields)    array_push($fields,$key);
+                    }
+
+                    foreach($this->getForeignValues() as $key=>$value)
+                    {
+                        $row[$key] = $value;
+                        if(!$haveFields)    array_push($fields,$key);
+                    }
+
+                    $array[$this->id] = $row;
+
+                    $haveFields = true;
+
+                }while($this->next());
+            }
+
+            return $array;
+        }
 }
 
 ?>

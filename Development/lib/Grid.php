@@ -150,42 +150,15 @@ class Grid {
      */
     function createGridFromRecordset($recordset)
     {
-        return $this->createGridFromArray($this->createArrayFromRecordset($recordset));
-    }
+        $array = $recordset->toArray();
 
-    function createArrayFromRecordset($recordset)
-    {
-        if($recordset->id)
-        {
-            $array = array();
+        if(!is_array($array)) return;
 
-            $haveFields = false;
-
-            do
-            {
-                $row = array();
-
-                //prepare the array to be passed to Grid::createGridFromArray()
-                foreach($recordset->getValues() as $key=>$value)
-                {
-                    $row[$key] = $value;
-                    if(!$haveFields)    array_push($this->fields,$key);
-                }
-
-                foreach($recordset->getForeignValues() as $key=>$value)
-                {
-                    $row[$key] = $value;
-                    if(!$haveFields)    array_push($this->fields,$key);
-                }
-
-                $array[$recordset->id] = $row;
-
-                $haveFields = true;
-
-            }while($recordset->next());
-        }
-
-        return $array;
+        $keys = array_keys($array);
+        
+        $this->fields = array_keys($array[$keys[0]]);
+        
+        return $this->createGridFromArray($array);
     }
 
     /**
@@ -484,7 +457,12 @@ class Grid {
      */
     function setResultsPerPage($resultsPerPage)
     {
-        $this->resultsPerPage = $resultsPerPage;
+        $resultsPerPage = (int) $resultsPerPage;
+
+        if($resultsPerPage > 0)
+        {
+            $this->resultsPerPage = $resultsPerPage;
+        }
     }
 
     /**

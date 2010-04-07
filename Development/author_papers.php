@@ -10,6 +10,7 @@ $conference_papers = $author->conference_papers;
 
 $grid = new AuthorPaperGrid();
 $grid->setColumnTitle("_year","List of Papers by " . $author->getFullName());
+$grid->setResultsPerPage($siteSettings->resultsPerPage);
 $grid->createGridFromRecordset($conference_papers);
 $grid->gridTitles = false;
 
