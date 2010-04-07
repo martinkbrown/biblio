@@ -9,6 +9,8 @@
  *
  * @author martin
  */
+require_once 'JournalVolumeNumber.php';
+
 class JournalPaper extends Recordset
 {
     /**
@@ -16,7 +18,7 @@ class JournalPaper extends Recordset
      * @var string  The main query for retrieving journal meetings
      */
     var $query = "SELECT jp.id, jp.title, jp.start_page, jp.end_page, jp.create_date, jp.email, jp.approved, jp.volume, jp.number,
-                                jvn.date as `date`, j.name as source_name
+                                jvn.date as `date`, j.id as journal_id, j.name as source_name
                                 FROM (journal_paper jp, author a, author_journal_paper ajp, journal j)
                                 LEFT JOIN journal_volume_number jvn ON (jp.number = jvn.number AND jp.volume = jvn.volume AND jp.journal_id = jvn.journal_id)
                                 WHERE jp.id = ajp.journal_paper_id AND a.id = ajp.author_id AND j.id = jp.journal_id  ";
@@ -27,6 +29,8 @@ class JournalPaper extends Recordset
      */
     var $authors = array();
 
+    var $volumeNumber;
+
     var $orderBy = " jvn.date DESC";
 
     /**
@@ -36,6 +40,7 @@ class JournalPaper extends Recordset
     function JournalPaper($id=0)
     {
         parent::Recordset($this->query . " AND jp.id = '$id'","journal_paper");
+        $this->volumeNumber = new JournalVolumeNumber($this->_journal_id,$this->volume,$this->number);
     }
 
     function getJournalPapersByAuthorId($author_id)
@@ -45,6 +50,12 @@ class JournalPaper extends Recordset
         $this->loadByQuery($this->query . " ORDER BY " . $this->orderBy);
     }
 
+    function setVolumeNumber($volumeNumber)
+    {
+        $this->setValue("number",$volumeNumber);
+        $this->volumeNumber = new JournalVolumeNumber($this->_journal_id,$this->volume,$volumeNumber);
+
+    }
     /**
      *
      * @param Author $author    An Author object. Should contain the information about one of the paper's authors
@@ -63,6 +74,7 @@ class JournalPaper extends Recordset
         if(parent::insert())
         {
             $this->saveAuthors();
+            $this->volumeNumber->save();
         }
 
         else return false;
@@ -79,6 +91,7 @@ class JournalPaper extends Recordset
         if(parent::update())
         {
             $this->saveAuthors();
+            $this->volumeNumber->save();
         }
 
         else return false;
