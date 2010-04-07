@@ -20,7 +20,7 @@ class JournalPaper extends Recordset
     var $query = "SELECT jp.id, jp.title, jp.start_page, jp.end_page, jp.create_date, jp.email, jp.approved, jp.volume, jp.number,
                                 jvn.date as `date`, j.id as journal_id, j.name as source_name
                                 FROM (journal_paper jp, author a, author_journal_paper ajp, journal j)
-                                LEFT JOIN journal_volume_number jvn ON (jp.number = jvn.number AND jp.volume = jvn.volume AND jp.journal_id = jvn.journal_id)
+                                LEFT JOIN journal_volume_number jvn ON (jp.number = jvn.number AND jp.volume = jvn.volume AND jp.journal_id = j.id)
                                 WHERE jp.id = ajp.journal_paper_id AND a.id = ajp.author_id AND j.id = jp.journal_id  ";
 
         /**
