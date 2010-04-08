@@ -20,7 +20,7 @@ class ConferencePaper extends Recordset {
      */
     var $cs;
         
-    var $query = "SELECT cp.id, cp.title, cp.start_page, cp.end_page, cp.create_date, cp.email, cp.approved,
+    var $query = "SELECT cp.id, cp.id as conference_paper_id, cp.title, cp.start_page, cp.end_page, cp.create_date, cp.email, cp.approved,
                                 cs.id as session_id, cs.name as session_name,
                                 cm.start_date as `date`, cm.name as source_name, cm.id as conference_meeting_id
                                 FROM (conference_paper cp, author a, author_conference_paper acp,conference_meeting cm)
@@ -47,12 +47,15 @@ class ConferencePaper extends Recordset {
      */
     function ConferencePaper($id=0)
     {
-        parent::Recordset($this->query . " AND cp.id = '$id'","conference_paper");
+        $id = (int) $id;
+        parent::Recordset($this->query . " AND cp.id = $id","conference_paper");
     }
 
     function getConferencePapersByAuthorId($author_id)
     {
-        $this->query .= " AND a.id = '$author_id'";
+        $author_id = (int) $author_id;
+        
+        $this->query .= " AND a.id = $author_id";
 
         $this->loadByQuery($this->query . " ORDER BY " . $this->orderBy);
     }
