@@ -25,9 +25,9 @@ $conf_meeting = new ConferenceMeeting();
 $grid = new ConferenceTableGrid();
 $conf_meeting->loadApprovedConferenceMeetings();
 $conf_meeting->loadConferenceMeetingsByConferenceId($_GET['conference_id']);
-$grid->setColumnTitle('name', 'Conference Meeting');
-$grid->setColumnTitle('city', 'Location');
-$grid->setColumnTitle('start_date', 'Date');
+$grid->setColumnTitle('_name', 'Conference Meeting');
+$grid->setColumnTitle('_city', 'Location');
+$grid->setColumnTitle('_start_date', 'Date');
 $grid->createGridFromRecordset($conf_meeting);
 //gives results to user
  echo $grid->getGrid();
