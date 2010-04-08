@@ -380,7 +380,7 @@ function isANumber($label,  $value) {
     {
         if(!$isbn)  return false;
 
-        $error = $label . " is not a valid ISBN number. Format must be xxxxxxxxxx or xxx-xxxxxxxxxx";
+        $error = $label . " is not a valid ISBN number. ";
 
         $currISBN = new ISBNtest();
         $currISBN->set_isbn($isbn);

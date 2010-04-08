@@ -15,6 +15,7 @@ require_once 'jquery_lib.php';
 require_once 'jquery_calendar_lib.php';
 require_once 'jquery_autocomplete_lib.php';
 require_once FRONT_END . OBJECTS . 'ConferenceMeeting.php';
+require_once FRONT_END . OBJECTS . 'ISBNtest.php';
 require_once FRONT_END . OBJECTS . 'Publisher.php';
 require_once('recaptcha/recaptchalib.php');
 require_once OBJECTS.'State.php';
@@ -79,6 +80,7 @@ if($_POST)
     //DROP DOWN so i deleted - $fv->isNull('publisher', 'name', $publisher->getFormValue('pub'),'Publisher');
     $fv->violatesDbConstraints('conference_meeting', 'publisher_website', $conference->getFormValue('pub_web'),'Publisher Website');
     $fv->violatesDbConstraints('conference_meeting', 'isbn', $conference_meeting->getFormValue('pub_isbn'),'ISBN');
+    $fv->isValidIsbn('isbn', $conference_meeting->getFormValue('pub_isbn'),'ISBN');
     $fv->violatesDbNull('conference_meeting', 'start_date', $conference_meeting->getFormValue('start_date'),'Start Date');
     $fv->violatesDbNull('conference_meeting', 'end_date', $conference_meeting->getFormValue('end_date'),'End Date');
     $fv->isValidDateRange("Start Date", "End Date", $conference_meeting->getFormValue('start_date'), $conference->getFormValue('end_date'));
