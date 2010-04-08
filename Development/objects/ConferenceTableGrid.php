@@ -14,13 +14,13 @@ require_once FRONT_END . LIB . 'Date.php';
 
 class ConferenceTableGrid extends Grid {
 
-    function handleName($row){
+    function handle_name($row){
         $conf_id = $_GET['conference_id'];
         echo $conf_id;
         return '<a href="conference_meeting_toc.php?big_conf='.$conf_id.'&conference_meeting_id='.$row['id'].'">'.$row['name'].'</a>';
     }
 
-    function handleCity($row){
+    function handle_city($row){
         if ($row['state_name'] == ""){
             return '<a>'.$row['city'].", ".$row['country_name'].'</a>';
         }
@@ -28,7 +28,7 @@ class ConferenceTableGrid extends Grid {
         return '<a>'.$row['city'].", ".$row['state_name'].", ".$row['country_name'].'</a>';
     }
 
-    function handleStart_date($row){
+    function handle_start_date($row){
 
         return Date::getDateRange(strtotime($row['start_date']),strtotime($row['end_date']));
     }
