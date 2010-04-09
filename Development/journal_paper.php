@@ -57,9 +57,9 @@ if ($_POST) {
         $fv->violatesDbConstraints('journal_paper', 'number', $_POST['journal_number'], 'Number');
     }
 
-    $fv->violatesDbConstraints('author','firstname', $_POST['journal_first_name[0]'], 'First Name');
-    $fv->violatesDbConstraints('author','initial',$_POST['journal_middle_init[0]'],$_POST['journal_middle_init[0]']);
-    $fv->violatesDbConstraints('author','lastname',$_POST['journal_last_name[0]'],$_POST['journal_last_name[0]']);
+//    $fv->violatesDbConstraints('author','firstname', $_POST['journal_first_name[0]'], 'First Name');
+//    $fv->violatesDbConstraints('author','initial',$_POST['journal_middle_init[0]'],$_POST['journal_middle_init[0]']);
+//    $fv->violatesDbConstraints('author','lastname',$_POST['journal_last_name[0]'],$_POST['journal_last_name[0]']);
 
     $fv->isValidCaptcha($recaptchaSettings->private_key);
 
@@ -81,32 +81,34 @@ if ($_POST) {
         $journal_paper->setValue('title', $_POST['journal_paper_title']);
         $journal_paper->setValue('start_page', $_POST['journal_paper_startpg']);
         $journal_paper->setValue('end_page', $_POST['journal_paper_endpg']);
-        $journal_paper->setValue('create_date', $_POST['journal_paper_endpg']);
+        $journal_paper->setValue('create_date', $_POST['journal_date']);
         $journal_paper->setValue('approved', 0);
         $journal_paper->setValue('volume',$_POST['journal_volume']);
-
-
-
 
         if ($_POST['journal_number']) {
             $journal_paper->setValue('number', $_POST['journal_number']);
         }
         $journal_paper->setValue('email',$_POST['user_email']);
-        // FIXME Put Date Checker
-        $journal_paper->setValue('create_date', mktime());
+        $journal_paper->setValue('create_date', $_POST['journal_date']);
 
-        // Saving Author
+        // Saving Brand New Authors that the DB didn't have
         foreach($_POST['firstname'] as $key=>$firstname) {
             $author = new Author();
-            $author->set
+            $author->setValue('firstname', $firstname);
+
+            // Hey Martin, how do I write the line below to loop thru the lastname and middle initial array again?
+            $author->setValue('lastname', $_POST['journal_last_name[$key]']);
+            $author->setValue('initial', $_POST['journal_middle_init[$key]']);
+            
+            $journal_paper->addAuthor($author);
         }
 
+        // Saving Authors that are Already in DB but need to be associated with this Journal Paper
         foreach($_POST['author_id'] as $key=>$id) {
             $author = new Author($id);
-            $author->addAuthor($author);
+            $journal_paper->addAuthor($author);
         }
-        //for
-        $journal_paper->addAuthor($author);
+
         if($journal_paper->save()) {
             $fv->addMessage("name", "Great! Journal Entry Saved");
             $fv->listMessages();
@@ -126,19 +128,28 @@ if ($_POST) {
         $journal_paper_id = $journal_paper->getId();
         $author_id = $author->getId();
 
-        // FIXME : We need a AuthorJournalPaper Class
+        // Saving Author Journal Paper
         $author_journal_paper = new AuthorJournalPaper();
+        $author_journal_paper->setValue('author_id', $author_id);
+        $author_journal_paper->setValue('journal_paper_id', $journal_paper_id);
+        // FIXME: Get main author Sihle
+        $author_journal_paper->setValue('main_author', $author_id);
 
 
 
-        // FIXME: We need a Journal Volume Number Class
         // Saving Journal Volume
         $journal_volume_number = new JournalVolumeNumber();
+        $journal_volume_number->setValue('number','journal_number') ;
+        $journal_volume_number->setValue('journal_id', $journal_paper_id) ;
+        $journal_volume_number->setValue('volume',$_POST['journal_volume']);
+        $journal_volume_number->setValue('date',$_POST['journal_date']) ;
+        $journal_paper->setVolumeNumber($journal_volume_number); // FIXME: Ask Martin About
 
 
 
 
 
+        // FIXME: Add this confirmation page option to Shereen's submit_verify page
         // Display confirmation page
         $util = new Utilities();
         $util->redirect("submit_journal_paper_confirm.php");
@@ -149,7 +160,7 @@ if ($_POST) {
 ?>
 <h2>Add a Journal Paper</h2>
 Fields marked with * are required <br>
-<form name ="frm_name" method ="POST">
+<form name ="frm_name" action="" method ="POST">
     <table>
         <tr>
             <td>Journal Name*</td>
@@ -229,7 +240,7 @@ Fields marked with * are required <br>
         <tr>
             <td>Date*</td>
             <td>
-                <input type= "text" name= "journal_date" size="46" value="<?php echo $_POST ['journal_date'] ?>"/>
+                <input type= "text" name= "journal_date" id ="journal_date" size="46" value="<?php echo $_POST ['journal_date'] ?>"/>
             </td>
             <td></td><td></td>
         </tr>
@@ -433,6 +444,14 @@ Fields marked with * are required <br>
     }
 
     setAuthorBlur();
+
+    // Function to enable user to pick date from a calendar drop down box
+    $(function()
+    {
+        $("#journal_date").datepicker();
+    });
+
+
 
 </script>
 
