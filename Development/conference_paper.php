@@ -20,10 +20,9 @@ require_once FRONT_END . OBJECTS . 'Author.php';
 require_once('recaptcha/recaptchalib.php');
 require_once 'jquery_timer_lib.php';
 require_once 'jquery_blockui_lib.php';
-
         
 $recaptchaSettings = new RecaptchaSettings();
-$conference_session = new ConferenceSession();
+//$conference_session = new ConferenceSession($conf_session->getFormValue('conf_sess_id'));
 $author = new Author();
 $conf_id = $_GET['conf_meet_id'];
 $conf_meeting = new ConferenceMeeting();
@@ -33,7 +32,12 @@ $conference_paper = new ConferencePaper();
 $author_conf = new AuthorConferencePaper($author->getId(),$conference_paper->getId());
 $ff = new FormValidator();
 $ff->isValidCaptcha($recaptchaSettings->private_key);
-//$conf_id = $_GET['conference_id'];
+
+$conf_session = new ConferenceSession($_POST['conf_sess_id']); //get only the conference session for that id
+//$query = "SELECT * FROM conference_session where conference_meeting_id=$conf_id";
+//$conf_session->loadByQuery($query);
+
+echo $conf_session->name; // prove i got the right conference
 
 echo "<h2>Add a Conference Paper</h2>";
 echo "<h4>Fields marked with * are required</h4>";
@@ -43,10 +47,7 @@ if($_POST)
 {
     $fv = new FormValidator();
     $count = count($_POST['first_name']);        
-    //echo $count;
-    //for ($i=0; $i <$count; $i++){
-    //      echo ($_POST['first_name'][0]);
-    // }
+
     foreach($_POST['first_name'] as $key=>$value){
         //echo $value;
         $fv->violatesDbConstraints('author','firstname', $value, 'First Name');
@@ -60,6 +61,8 @@ if($_POST)
         $fv->violatesDbConstraints('author','lastname', $value, 'Last Name');
     }
 
+    $fv->violatesDbConstraints('conference_paper', 'title', $conference_paper->getFormValue('paper_title'),'Paper Tile');
+    $fv->violatesDbConstraints('conference_session', 'name', $conf_session->getFormValue('conf_sess_name'),'Session Name');
     $fv->violatesDbConstraints('conference_paper', 'title', $conference_paper->getFormValue('paper_title'),'Paper Tile');
     $fv->violatesDbConstraints('conference_paper', 'start_page', $conference_paper->getFormValue('start_pg'),'Start Page');
     $fv->violatesDbConstraints('conference_paper', 'end_page', $conference_paper->getFormValue('end_pg'),'End Page');
@@ -88,12 +91,11 @@ if($_POST)
         $conference_paper->setValue('email',$conference_paper->getFormValue('email'));
         $conference_paper->setValue('approved',0);
         $conference_paper->setValue('conference_meeting_id', $conf_id);
-        $conference_paper->setValue('conference_session_id', $conference_session->getId());
-        $conference_session->setValue('conference_meeting_id', $conf_id);
+        $conf_session->setValue('name',$conf_session->getFormValue('conf_sess_name'));
+        $conf_session->setValue('conference_meeting_id',$conf_id);
+        $conference_paper->setConferenceSession($conf_session);
         $count = count($_POST['first_name']);
         for ($i=0; $i <$count; $i++){
-            //if ($i==0) {$author_conf->setValue('main_author', '1');}
-            //else {$author_conf->setValue('main_author', '0');}
             $author = new Author();
             $author->setValue('firstname', $_POST['first_name'][$i]);
             $author->setValue('initial', $_POST['mid_initial'][$i]);
@@ -103,6 +105,9 @@ if($_POST)
         $getdate = getdate();
         $submit_date = $getdate[0]; //unix timestamp
         //echo  $submit_date;
+        if (!($conf_session->id)){
+            $conf_session->save();
+        }
         $conference_paper->setValue('create_date', $submit_date);
         $conference_paper->save();
         $util = new Utilities();
@@ -120,6 +125,12 @@ if($_POST)
                 <?php
                   echo $conf_meeting->getValue("name");
                 ?>
+            </td>
+        </tr>
+        <tr>
+            <td><b>Conference Session  </b></td>
+            <td> <?php print"<input id='conf_sess_name' autocomplete='off' type='text' name='conf_sess_name' value='".$conf_session->getFormValue('conf_sess_name')."'; size='40'>\n"; ?>
+                <input id="conf_sess_id" type="hidden" name="conf_sess_id" value="<?php echo $_POST['conf_sess_id'] ?>"/>
             </td>
         </tr>
         <tr>
@@ -350,7 +361,14 @@ function getSimilarAuthors()
     });
     
 }
+$("#conf_sess_name").autocomplete("get_conf_session_autocomplete.php?conf_meet_id=<?php echo $conf_id ?>");
+$('conf_sess_name').setOptions({ max: 5 });
+$("#conf_sess_name").result(function(event, data, formatted)
+{
+    $("#conf_sess_id").val(data[1]);
+    
 
+});
 function setAuthorBlur()
 {
     $(".author_item").blur(getSimilarAuthors);

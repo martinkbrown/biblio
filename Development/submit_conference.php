@@ -2,8 +2,7 @@
 /*
  * This page creates a form for the user to fill out information
  * to add a conference to the database.
- * Author1: Sihle Wilson
- * Author2: Sherene Campbell
+ * Author: Sherene Campbell
  * Date: 3/1/2010
 */
 
