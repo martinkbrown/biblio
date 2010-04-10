@@ -25,15 +25,24 @@ class FormValidator
      * @param <type> $value the actual data to be tested
      * @return <type> bool - true if value can be evaluated as a number, false if otherwise
      */
-function isANumber($label,  $value) {
-   if (is_numeric($value)){
-       return true;
-   }else{
-       $this->addError($label, $label." must be a number");
-       return false;
-   }
-}
+    function isANumber($label,  $value) {
+       if (is_numeric($value)){
+           return true;
+       }else{
+           $this->addError($label, $label." must be a number");
+           return false;
+       }
+    }
 
+    function num_diff_valid($label,  $num1, $num2){
+        if ($num1 > $num2){
+            $value = "invalid_order";
+            $error = "Your start page is greater than your end page";
+            $this->addError($value, $error);
+            return false;
+        }
+        else return true;
+    }
     /**
      * Links an error to a specific field in a form
      * @param string $value     the name of the field that this error will be linked to

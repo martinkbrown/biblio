@@ -66,6 +66,9 @@ if($_POST)
     $fv->violatesDbConstraints('conference_paper', 'title', $conference_paper->getFormValue('paper_title'),'Paper Tile');
     $fv->violatesDbConstraints('conference_paper', 'start_page', $conference_paper->getFormValue('start_pg'),'Start Page');
     $fv->violatesDbConstraints('conference_paper', 'end_page', $conference_paper->getFormValue('end_pg'),'End Page');
+    $fv->isANumber('start_pg', $conference_paper->getFormValue('start_pg'));
+    $fv->isANumber('end_pg', $conference_paper->getFormValue('end_pg'));
+    $fv->num_diff_valid('start_end_pg', $conference_paper->getFormValue('start_pg'), $conference_paper->getFormValue('end_pg'));
     $check_email = $fv->oracle_string($conference_paper->getFormValue('email'),$conference_paper->getFormValue('confirm_email'));
 
     if ($check_email){
@@ -106,6 +109,10 @@ if($_POST)
         $submit_date = $getdate[0]; //unix timestamp
         //echo  $submit_date;
         if (!($conf_session->id)){
+            $conf_session->save();
+        }else{
+            if($conf_session->name != $conf_session->getFormValue('conf_sess_name') ) //incase user adds information to drop down item
+            $conf_session->id ="";
             $conf_session->save();
         }
         $conference_paper->setValue('create_date', $submit_date);
