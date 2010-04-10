@@ -154,10 +154,6 @@ class Grid {
 
         if(!is_array($array)) return;
 
-        $keys = array_keys($array);
-        
-        $this->fields = array_keys($array[$keys[0]]);
-        
         return $this->createGridFromArray($array);
     }
 
@@ -167,7 +163,17 @@ class Grid {
      */
     function createGridFromArray($array)
     {
-        //get the number of results in the array
+        foreach($array as $key=>$value)
+        {
+            foreach($value as $k=>$v)
+            {
+                if(!in_array($k,$this->fields))
+                {
+                    array_push($this->fields,$k);
+                }
+            }
+        }
+        
         $this->results = sizeof($array);
 
         if($_GET['pageNo'])

@@ -17,7 +17,7 @@ class JournalPaper extends Recordset
      *
      * @var string  The main query for retrieving journal meetings
      */
-    var $query = "SELECT jp.id, jp.title, jp.start_page, jp.end_page, jp.create_date, jp.email, jp.approved, jp.volume, jp.number,
+    var $query = "SELECT jp.id, jp.id as journal_paper_id, jp.title, jp.start_page, jp.end_page, jp.create_date, jp.email, jp.approved, jp.volume, jp.number,
                                 jvn.date as `date`, j.id as journal_id, j.name as source_name
                                 FROM (journal_paper jp, author a, author_journal_paper ajp, journal j)
                                 LEFT JOIN journal_volume_number jvn ON (jp.number = jvn.number AND jp.volume = jvn.volume AND jp.journal_id = j.id)

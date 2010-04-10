@@ -20,6 +20,7 @@ class AuthorPaperGrid extends Grid
         $pages = $row['start_page'] . " - " . $row['end_page'];
         $source = $row['source_name'];
         $cm_id = $row['conference_meeting_id'];
+        $j_id = $row['journal_id'];
 
         if($this->current_year != $year)
         {
@@ -30,8 +31,39 @@ class AuthorPaperGrid extends Grid
         {
             $year = "";
         }
+
+        $author = new Author();
+
+        if($row['journal_id'])
+        {
+            $author->getAuthorsByJournalPaperId($row['journal_paper_id']);
+        }
+        else
+        {
+            $author->getAuthorsByConferencePaperId($row['conference_paper_id']);
+        }
         
-        return "$year \"$title\"<br/><a href=\"conference_meeting_toc.php?conference_meeting_id=$cm_id\">$source</a> pages $pages<br/><br/>";
+        $author = $author->toArray();
+
+        $authors = "";
+
+        $counter = 1;
+        foreach($author as $key=>$auth)
+        {
+            $name = $auth['firstname'];
+            $name .= $auth['initial'] ? " " . $auth['initial'] : "";
+            $name .= " " . $auth['lastname'];
+            $authors .= "(" . ($counter++) . ") <a href=\"author_papers.php?author_id=$key\">$name</a>&nbsp;&nbsp;&nbsp;";
+        }
+
+        if($row['journal_id'])
+        {
+            return "$year \"$title\"<br/>$authors<br/><a href=\"journal_papers.php?journal_id=$j_id\">$source</a> pages $pages<br/><br/>";
+        }
+        else
+        {
+            return "$year \"$title\"<br/>$authors<br/><a href=\"conference_meeting_toc.php?conference_meeting_id=$cm_id\">$source</a> pages $pages<br/><br/>";
+        }
     }
 }
 
