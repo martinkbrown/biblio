@@ -188,7 +188,7 @@ if($_POST)
         </tr>
         <tr>
             <td><b>Confirm Email*</b></td>
-            <td><input type ="text" name ="confirm_email" size="40"></td>
+            <td><input type ="text" name ="confirm_email" size="40" autocomplete='off'></td>
         </tr>
         <tr>
             <td></td>
