@@ -17,7 +17,7 @@ class AuthorPaperGrid extends Grid
     {
         $year = date("Y",$row['date']);
         $title = $row['title'];
-        $pages = $row['start_page'] . " - " . $row['end_page'];
+        $pages = "Pages " . $row['start_page'] . " - " . $row['end_page'];
         $source = $row['source_name'];
         $cm_id = $row['conference_meeting_id'];
         $j_id = $row['journal_id'];
@@ -37,10 +37,12 @@ class AuthorPaperGrid extends Grid
         if($row['journal_id'])
         {
             $author->getAuthorsByJournalPaperId($row['journal_paper_id']);
+            $source = "<a href=\"journal_papers.php?journal_id=$j_id\">$source</a>";
         }
         else
         {
             $author->getAuthorsByConferencePaperId($row['conference_paper_id']);
+            $source = "<a href=\"conference_meeting_toc.php?conference_meeting_id=$cm_id\">$source</a>";
         }
         
         $author = $author->toArray();
@@ -53,17 +55,10 @@ class AuthorPaperGrid extends Grid
             $name = $auth['firstname'];
             $name .= $auth['initial'] ? " " . $auth['initial'] : "";
             $name .= " " . $auth['lastname'];
-            $authors .= "(" . ($counter++) . ") <a href=\"author_papers.php?author_id=$key\">$name</a>&nbsp;&nbsp;&nbsp;";
+            $authors .=  "<a href=\"author_papers.php?author_id=$key\">$name</a>&nbsp;&nbsp;&nbsp;";
         }
 
-        if($row['journal_id'])
-        {
-            return "$year $title<br/>$authors<br/><a href=\"journal_papers.php?journal_id=$j_id\">$source</a> pages $pages<br/><br/>";
-        }
-        else
-        {
-            return "$year $title<br/>$authors<br/><a href=\"conference_meeting_toc.php?conference_meeting_id=$cm_id\">$source</a> pages $pages<br/><br/>";
-        }
+        return "$year $title<br/>$authors<br/>$source $pages<br/><br/>";
     }
 }
 

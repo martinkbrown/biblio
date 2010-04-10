@@ -15,10 +15,9 @@ $grid->setResultsPerPage($siteSettings->resultsPerPage);
 
 $conference_array = $conference_papers->toArray();
 $journal_array = $journal_papers->toArray();
-//print_r($conference_array);echo "<br/><br/>";
-//print_r($journal_array);echo "<br/><br/>";
+
 $papers = array_merge($conference_array,$journal_array);
-//print_r($papers);echo "<br/><br/>";
+
 $grid->createGridFromArray($papers);
 
 $grid->gridTitles = false;
