@@ -25,7 +25,7 @@ class AuthorPaperGrid extends Grid
         if($this->current_year != $year)
         {
             $this->current_year = $year;
-            $year = "<b>" . $year . "</b><br/>";
+            $year = "<center><b>" . $year . "</b></center>";
         }
         else
         {
@@ -58,11 +58,11 @@ class AuthorPaperGrid extends Grid
 
         if($row['journal_id'])
         {
-            return "$year \"$title\"<br/>$authors<br/><a href=\"journal_papers.php?journal_id=$j_id\">$source</a> pages $pages<br/><br/>";
+            return "$year $title<br/>$authors<br/><a href=\"journal_papers.php?journal_id=$j_id\">$source</a> pages $pages<br/><br/>";
         }
         else
         {
-            return "$year \"$title\"<br/>$authors<br/><a href=\"conference_meeting_toc.php?conference_meeting_id=$cm_id\">$source</a> pages $pages<br/><br/>";
+            return "$year $title<br/>$authors<br/><a href=\"conference_meeting_toc.php?conference_meeting_id=$cm_id\">$source</a> pages $pages<br/><br/>";
         }
     }
 }
