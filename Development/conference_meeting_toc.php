@@ -4,15 +4,19 @@
  * and open the template in the editor.
  */
 require_once 'header.php';
-require_once LIB . 'Date.php';
-$conf_id = $_GET['big_conf'];
-require_once OBJECTS . 'Author.php';
-$conf_meet_id = $_GET['conference_meeting_id'];
-echo "<h2>Name of Conference</h2>";
-echo '<a href="conference_paper.php?big_conf='.$conf_id.'&conf_meet_id='.$conf_meet_id.'">Add new Conference Paper </a>';
-
 require_once FRONT_END . OBJECTS . 'ConferenceMeeting.php';
 require_once FRONT_END . OBJECTS . 'ConferencePaper.php';
+require_once FRONT_END . OBJECTS . 'Conference.php';
+require_once LIB . 'Date.php';
+$conference = new Conference();
+$conf_id = $_GET['big_conf'];
+$conference->loadById($conf_id);
+require_once OBJECTS . 'Author.php';
+$conf_meet_id = (int)$_GET['conference_meeting_id'];
+echo '<h2>'. $conference->name .'('.$conference->acronym.')'.'</h2>';
+echo '<a href="conference_paper.php?big_conf='.$conf_id.'&conf_meet_id='.$conf_meet_id.'">Add new Conference Paper </a>';
+
+
 
 $conf_meeting = new ConferenceMeeting();
 $conf_paper = new ConferencePaper();
@@ -50,8 +54,10 @@ echo "<h3>$name: $daterange $city,  $state, $country; $publisher  ISBN#:$isbn </
 echo '<table>';
 do
 {
-      $conf_session_id = $conf_session->id;
-      $conf_paper_id = "SELECT id,title,start_page,end_page from conference_paper where conference_meeting_id=$conf_meet_id and conference_session_id = $conf_session_id";
+      $conf_session_id = (int) $conf_session->id;
+      $conf_paper_id = "SELECT cp.id,cp.title,cp.start_page,cp.end_page from conference_paper cp
+      left join conference_session cs on cs.id = cp.conference_session_id
+      where cp.conference_meeting_id=$conf_meet_id and cp.conference_session_id = $conf_session_id ";
       $conf_paper->loadByQuery($conf_paper_id);
       //echo "Session: $conf_session->name <br/>";
       echo '<tr><td>'.$conf_session->name.'</td></tr>';
