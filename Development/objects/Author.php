@@ -72,8 +72,8 @@ class Author extends Recordset
         $id = (int) $id;
         $this->query = "SELECT a.id, a.firstname, a.initial, a.lastname FROM author a, conference_paper cp,
                             author_conference_paper acp
-                        WHERE a.id = acp.author_id AND acp.conference_paper_id = cp.id
-                        AND cp.id = $id
+                        WHERE cp.id = $id
+                        AND a.id = acp.author_id AND acp.conference_paper_id = cp.id
                         ORDER BY main_author DESC, lastname";
 
         $this->loadByQuery($this->query);
@@ -84,8 +84,8 @@ class Author extends Recordset
         $id = (int) $id;
         $this->query = "SELECT a.id, a.firstname, a.initial, a.lastname FROM author a, journal_paper jp,
                             author_journal_paper ajp
-                        WHERE a.id = ajp.author_id AND ajp.journal_paper_id = jp.id
-                        AND jp.id = $id
+                        WHERE jp.id = $id AND
+                        a.id = ajp.author_id AND ajp.journal_paper_id = jp.id
                         ORDER BY main_author DESC, lastname";
 
         $this->loadByQuery($this->query);

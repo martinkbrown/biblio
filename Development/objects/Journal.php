@@ -37,7 +37,9 @@ class Journal extends Recordset {
     function loadJournalsByKeyword($keyword)
     {
         $sql =& sql();
-        echo basename($keyword);
+
+        $keyword = $sql->escape($keyword);
+
         $keyword = $sql->escape(basename($keyword));
         $this->query .= " AND name REGEXP '[[:<:]]{$keyword}[[:>:]]'";
 

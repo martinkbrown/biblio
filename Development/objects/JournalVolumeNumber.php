@@ -11,13 +11,14 @@
  */
 class JournalVolumeNumber extends Recordset
 {
-    function JournalVolumeNumber($journal_id=0,$volume_id=0,$number=0)
+    function JournalVolumeNumber($journal_id=0,$volume=0,$number=0)
     {
         $journal_id = (int) $journal_id;
-        $volume_id = (int) $volume_id;
+        $volume = (int) $volume_id;
         $number = (int) $number;
 
-        $query = "SELECT * FROM journal_volume_number WHERE number = $author_id AND journal_id = $journal_id";
+        $query = "SELECT * FROM journal_volume_number WHERE number = $number AND journal_id = $journal_id
+                    AND volume = $volume";
 
         parent::Recordset(0,"author_journal_paper");
 
