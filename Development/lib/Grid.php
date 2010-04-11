@@ -152,7 +152,11 @@ class Grid {
     {
         $array = $recordset->toArray();
 
-        if(!is_array($array)) return;
+        if(!is_array($array))
+        {
+            $this->grid = $this->noResults;
+            return;
+        }
 
         return $this->createGridFromArray($array);
     }
