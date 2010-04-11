@@ -39,13 +39,16 @@ class JournalPaper extends Recordset
      */
     function JournalPaper($id=0)
     {
-        parent::Recordset($this->query . " AND jp.id = '$id'","journal_paper");
+        $id = (int) $id;
+        parent::Recordset($this->query . " AND jp.id = $id","journal_paper");
         $this->volumeNumber = new JournalVolumeNumber($this->_journal_id,$this->volume,$this->number);
     }
 
     function getJournalPapersByAuthorId($author_id)
     {
-        $this->query .= " AND a.id = '$author_id'";
+        $author_id = (int) $author_id;
+        
+        $this->query .= " AND a.id = $author_id";
 
         $this->loadByQuery($this->query . " ORDER BY " . $this->orderBy);
     }

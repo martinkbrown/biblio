@@ -23,7 +23,8 @@ class Author extends Recordset
     {
         if($id)
         {
-            $this->query .= " AND a.id = '" . $id . "'";
+            $id = (int) $id;
+            $this->query .= " AND a.id = $id";
             parent::Recordset($this->query,"author");
         }
         else

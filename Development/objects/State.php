@@ -34,7 +34,7 @@ class State extends Recordset{
         $sql =& sql();
         $countryId = (int) $countryId;
 
-        $this->query = $this->query . " AND c.id = '{$countryId}'";
+        $this->query = $this->query . " AND c.id = $countryId";
         $this->loadByQuery($this->query);
     }
 
@@ -47,7 +47,7 @@ class State extends Recordset{
         $sql =& sql();
         $keyword = $sql->escape($keyword);
 
-        $this->query = $this->query . " AND s.name LIKE '%{$keyword}%'";
+        $this->query = $this->query . " AND s.name LIKE '{$keyword}%'";
         $this->loadByQuery($this->query);
     }
 }

@@ -61,13 +61,13 @@ class ConferenceMeeting extends Recordset {
      */
     function loadApprovedConferenceMeetings()
     {
-        $this->query = $this->query . " AND cm.approved = '1'";
+        $this->query = $this->query . " AND cm.approved = 1";
         $this->loadByQuery($this->query . " ORDER BY cm.start_date DESC");
     }
 
     function loadUnApprovedConferenceMeetings()
     {
-        $this->query = $this->query . " AND cm.approved = '0'";
+        $this->query = $this->query . " AND cm.approved = 0";
         $this->loadByQuery($this->query . " ORDER BY cm.start_date DESC");
     }
 
@@ -79,7 +79,7 @@ class ConferenceMeeting extends Recordset {
     function loadConferenceMeetingById($conferenceMeetingId)
     {
         $conferenceMeetingId = (int) $conferenceMeetingId;
-        $this->query = $this->query . " AND cm.id = '{$conferenceMeetingId}'";
+        $this->query = $this->query . " AND cm.id = $conferenceMeetingId";
         $this->loadByQuery($this->query . " ORDER BY cm.start_date DESC");
     }
 
@@ -90,7 +90,7 @@ class ConferenceMeeting extends Recordset {
     function loadConferenceMeetingsByConferenceId($conferenceId)
     {
         $conferenceId = (int) $conferenceId;
-        $this->query = $this->query . " AND c.id = '{$conferenceId}'";
+        $this->query = $this->query . " AND c.id = $conferenceId";
         $this->loadByQuery($this->query . " ORDER BY cm.start_date DESC");
     }
 
