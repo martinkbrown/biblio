@@ -23,13 +23,13 @@ $grid->createGridFromRecordset($author);
         <tr>
             <td>First Name</td>
             <td>
-                <input type="text" name="firstname" value="<?php echo htmlspecialchars($_GET['firstname']) ?> "/>
+                <input type="text" name="firstname" value="<?php echo htmlspecialchars($_GET['firstname']) ?>"/>
             </td>
         </tr>
         <tr>
             <td>Last Name</td>
             <td>
-                <input type="text" name="lastname" value="<?php echo htmlspecialchars($_GET['lastname']) ?> "/>
+                <input type="text" name="lastname" value="<?php echo htmlspecialchars($_GET['lastname']) ?>"/>
             </td>
         </tr>
         <tr>
