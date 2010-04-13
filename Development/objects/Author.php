@@ -61,8 +61,21 @@ class Author extends Recordset
         $firstname = $sql->escape($firstname);
         $lastname = $sql->escape($lastname);
 
-        $this->query .= " AND a.firstname = '" . $firstname . "'
-                                AND a.lastname = '" . $lastname . "'";
+        if(!$firstname && !$lastname)
+        {
+            return;
+        }
+
+        if($firstname)
+        {
+            $this->query .= " AND a.firstname REGEXP '[[:<:]]{$firstname}'";
+
+        }
+
+        if($lastname)
+        {
+            $this->query .= " AND a.lastname REGEXP '[[:<:]]{$lastname}'";
+        }
         
         return $this->loadByQuery($this->query);
     }
