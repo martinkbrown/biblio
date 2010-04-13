@@ -10,7 +10,8 @@ require_once FRONT_END . OBJECTS . 'State.php';
 require_once FRONT_END . OBJECTS . 'Country.php';
 require_once FRONT_END . OBJECTS . 'AdminStateGrid.php';
 
-$state = new State("SELECT * FROM state ORDER BY name");
+$state = new State();
+$state->loadStates();
 
 $country = new Country();
 $country->loadCountries();
