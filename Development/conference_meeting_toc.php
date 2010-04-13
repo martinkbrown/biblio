@@ -41,7 +41,7 @@ function print_toc($conf_session_id,$conf_meet_id,$conf_session_id,$author,$conf
               $author->getAuthorsByConferencePaperId($id_paper);
               echo '<tr><td></td><td>';
                     do{
-                         echo "<a href=authors.php>$author->firstname.' '.$author->initial.' '.$author->lastname</a>";
+                         echo "<a href=author_papers.php?author_id=$author->id>$author->firstname $author->initial $author->lastname</a>";
                          echo " ";
                     }while($author->next()); echo '</td></tr>';
               echo '<tr><td></td><td>Pages '.$conf_paper->start_page.' - '.$conf_paper->end_page.'</td></tr>';
