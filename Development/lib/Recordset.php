@@ -513,10 +513,10 @@ class Recordset
 
         function toArray()
         {
+            $array = array();
+            
             if($this->id)
             {
-                $array = array();
-
                 $haveFields = false;
 
                 $fields = array();

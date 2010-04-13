@@ -15,7 +15,7 @@ class AuthorPaperGrid extends Grid
 
     function handle_year($row)
     {
-        $year = date("Y",$row['date']);
+        $year = date("Y",(int) $row['date']);
         $title = $row['title'];
         $pages = "Pages " . $row['start_page'] . " - " . $row['end_page'];
         $source = $row['source_name'];
