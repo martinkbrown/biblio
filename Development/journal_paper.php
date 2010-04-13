@@ -51,11 +51,12 @@ if ($_POST) {
     $fv->violatesDbConstraints('journal_paper', 'title', $_POST['journal_paper_title'], 'Title');
     $fv->violatesDbConstraints('journal_paper', 'start_page', $_POST['journal_paper_startpg'], 'Start Page');
     $fv->violatesDbConstraints('journal_paper', 'end_page', $_POST['journal_paper_endpg'], 'End Page');
-    $fv->violatesDbConstraints('journal_paper', 'volume', $_POST['journal_paper_volume'], 'Volume');
+    $fv->violatesDbConstraints('journal_paper', 'volume', $_POST['journal_volume'], 'Volume');
     if ($_POST['journal_number']) {
         $fv->isANumber('Number', $_POST['journal_number']);
         $fv->violatesDbConstraints('journal_paper', 'number', $_POST['journal_number'], 'Number');
-    } 
+    }
+    $fv->isPositiveNumber('Volume',$_POST['journal_volume']);
 
 //    $fv->violatesDbConstraints('author','firstname', $_POST['journal_first_name[0]'], 'First Name');
 //    $fv->violatesDbConstraints('author','initial',$_POST['journal_middle_init[0]'],$_POST['journal_middle_init[0]']);
