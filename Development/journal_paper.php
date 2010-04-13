@@ -55,7 +55,7 @@ if ($_POST) {
     if ($_POST['journal_number']) {
         $fv->isANumber('Number', $_POST['journal_number']);
         $fv->violatesDbConstraints('journal_paper', 'number', $_POST['journal_number'], 'Number');
-    }
+    } 
 
 //    $fv->violatesDbConstraints('author','firstname', $_POST['journal_first_name[0]'], 'First Name');
 //    $fv->violatesDbConstraints('author','initial',$_POST['journal_middle_init[0]'],$_POST['journal_middle_init[0]']);
@@ -87,19 +87,20 @@ if ($_POST) {
 
         if ($_POST['journal_number']) {
             $journal_paper->setValue('number', $_POST['journal_number']);
+        } else { // If Number is Blank it must be automatically created
+            $journal_paper->setValue('number', '1');
         }
         $journal_paper->setValue('email',$_POST['user_email']);
         $journal_paper->setValue('create_date', $_POST['journal_date']);
+
+        // FIXME: Determine Main Author ---> Release 2.4 would probably have specs for this
 
         // Saving Brand New Authors that the DB didn't have
         foreach($_POST['firstname'] as $key=>$firstname) {
             $author = new Author();
             $author->setValue('firstname', $firstname);
-
-            // Hey Martin, how do I write the line below to loop thru the lastname and middle initial array again?
-            $author->setValue('lastname', $_POST['journal_last_name[$key]']);
-            $author->setValue('initial', $_POST['journal_middle_init[$key]']);
-            
+            $author->setValue('lastname', $_POST['journal_last_name'][$key]);
+            $author->setValue('initial', $_POST['journal_middle_init'][$key]);
             $journal_paper->addAuthor($author);
         }
 
@@ -127,17 +128,17 @@ if ($_POST) {
         // Get IDs to create Author Journal Paper Class
         $journal_paper_id = $journal_paper->getId();
         $author_id = $author->getId();
+//
+//          Martin says that this will be done automatically when journal paper is saved
+//        // Saving Author Journal Paper
+//        $author_journal_paper = new AuthorJournalPaper();
+//        $author_journal_paper->setValue('author_id', $author_id);
+//        $author_journal_paper->setValue('journal_paper_id', $journal_paper_id);
+//        // FIXME: Get main author Sihle
+//        $author_journal_paper->setValue('main_author', $author_id);
 
-        // Saving Author Journal Paper
-        $author_journal_paper = new AuthorJournalPaper();
-        $author_journal_paper->setValue('author_id', $author_id);
-        $author_journal_paper->setValue('journal_paper_id', $journal_paper_id);
-        // FIXME: Get main author Sihle
-        $author_journal_paper->setValue('main_author', $author_id);
 
-
-
-        // Saving Journal Volume
+        // Saving Journal Volume Number
         $journal_volume_number = new JournalVolumeNumber();
         $journal_volume_number->setValue('number','journal_number') ;
         $journal_volume_number->setValue('journal_id', $journal_paper_id) ;
@@ -146,10 +147,7 @@ if ($_POST) {
         $journal_paper->setVolumeNumber($journal_volume_number); // FIXME: Ask Martin About
 
 
-
-
-
-        // FIXME: Add this confirmation page option to Shereen's submit_verify page
+       // FIXME: Add this confirmation page option to Shereen's submit_verify page
         // Display confirmation page
         $util = new Utilities();
         $util->redirect("submit_journal_paper_confirm.php");
