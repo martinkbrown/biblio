@@ -32,6 +32,7 @@ class FormValidator {
             $this->addError($label, $label." must be a postive integer");
             return false;
         }
+    }
         /**
          * Function checks that the value is a number or not. If not, false is returned and an error message is added
          * to the messaging queue using addError function so that it can be printed with other errors.
@@ -191,7 +192,7 @@ class FormValidator {
          * @return bool
          */
         function isNull($value,$label = "") {
-            if(trim($value) == "") {
+            if(trim((string) $value) == "") {
                 $this->addError($value,$label." is required");
                 return true;
             }
