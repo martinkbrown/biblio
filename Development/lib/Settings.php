@@ -37,6 +37,7 @@ class Settings
 
             //create a variable and assign it a value
             $this->$attr[0] = $attr[1];
+            $GLOBALS[$attr[0]] = $attr[1];
         }
 
         fclose($handle);

@@ -337,7 +337,9 @@ class FormValidator {
             }
         }
 
-        function isValidCaptcha($private_key) {
+        function isValidCaptcha($private_key) 
+        {
+            if($GLOBALS['enable_recaptcha'] != 1)    return true;
             $resp = recaptcha_check_answer ($private_key,
                     $_SERVER["REMOTE_ADDR"],
                     $_POST["recaptcha_challenge_field"],

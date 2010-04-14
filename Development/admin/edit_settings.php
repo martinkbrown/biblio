@@ -1,5 +1,6 @@
 <?php
 
+error_reporting(E_ERROR | E_WARNING);
 /* 
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
@@ -34,6 +35,7 @@ if($_POST)
     }
 
     fclose($fp);
+    header("location:edit_settings.php?target=" . $_GET['target']);
 }
 
 echo $_GET['target'];
