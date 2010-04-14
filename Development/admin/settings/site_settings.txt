@@ -1,3 +1,3 @@
 siteTitle=Biblio
 resultsPerPage=10
-siteUrl=http://localhost/biblio/Development/
+siteUrl=http://localhost/biblio_pl/Development/
