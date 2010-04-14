@@ -76,7 +76,14 @@ if ($_POST) {
     }
 
     // If errors exist, inform user else save data and display confirmation page
-    if ($fv->hasErrors()) {
+    
+}
+
+?>
+<h2>Add a Journal Paper</h2>
+Fields marked with * are required <br><br>
+<?php
+if ($fv->hasErrors()) {
         $fv->listErrors();
     } else {
         // Save Form Data
@@ -110,7 +117,7 @@ if ($_POST) {
         }
 
         // Saving Authors that are Already in DB but need to be associated with this Journal Paper
-        
+
         foreach($_POST['author_id'] as $key=>$id) {
             $author = new Author($id);
             $journal_paper->addAuthor($author);
@@ -150,7 +157,7 @@ if ($_POST) {
         $journal_volume_number->setValue('journal_id', $journal_paper_id) ;
         $journal_volume_number->setValue('volume',$_POST['journal_volume']);
         $journal_volume_number->setValue('date',$_POST['journal_date']) ;
-        $journal_paper->setVolumeNumber($journal_volume_number); 
+        $journal_paper->setVolumeNumber($journal_volume_number);
 
 
        // FIXME: Add this confirmation page option to Shereen's submit_verify page
@@ -159,11 +166,7 @@ if ($_POST) {
         $util->redirect("submit_journal_paper_confirm.php");
 
     }
-}
-
-?>
-<h2>Add a Journal Paper</h2>
-Fields marked with * are required <br>
+    ?>
 <form name ="frm_name" action="" method ="POST">
     <table>
         <tr>
