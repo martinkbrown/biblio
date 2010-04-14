@@ -41,10 +41,10 @@ if ($_POST) {
     $fv->isNull($_POST['journal_paper_endpg'], 'End Page');
     $fv->isNull($_POST['journal_volume'], 'Volume');
     $fv->isNull($_POST['journal_date'], 'Date');
-    foreach($_POST['journal_firstname'] as $key=>$firstname) {
+    foreach($_POST['journal_first_name'] as $key=>$firstname) {
         $fv->isNull($firstname, 'First Name');
         $fv->isNull($_POST['journal_middle_init'][$key], 'Middle Initial');
-        $fv->isNull($_POST['journal_lastname'][$key], 'Last Name');
+        $fv->isNull($_POST['journal_last_name'][$key], 'Last Name');
     }
 
     // Check if violates DB Contraints
