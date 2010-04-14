@@ -56,6 +56,10 @@ if ($_POST) {
         $fv->isANumber('Number', $_POST['journal_number']);
         $fv->violatesDbConstraints('journal_paper', 'number', $_POST['journal_number'], 'Number');
     }
+    // Validate that start page is less than end page
+    if ($_POST['journal_paper_startpg'] > $_POST['journal_paper_endpg'] ){
+        $fv->addError('Start Page', 'Start page must be less than End Page');
+    }
     $fv->isPositiveNumber('Volume',$_POST['journal_volume']);
 
 //    $fv->violatesDbConstraints('author','firstname', $_POST['journal_first_name[0]'], 'First Name');
@@ -97,7 +101,7 @@ if ($_POST) {
         // FIXME: Determine Main Author ---> Release 2.4 would probably have specs for this
 
         // Saving Brand New Authors that the DB didn't have
-        foreach($_POST['firstname'] as $key=>$firstname) {
+        foreach($_POST['journal_first_name'] as $key=>$firstname) {
             $author = new Author();
             $author->setValue('firstname', $firstname);
             $author->setValue('lastname', $_POST['journal_last_name'][$key]);
@@ -106,6 +110,7 @@ if ($_POST) {
         }
 
         // Saving Authors that are Already in DB but need to be associated with this Journal Paper
+        
         foreach($_POST['author_id'] as $key=>$id) {
             $author = new Author($id);
             $journal_paper->addAuthor($author);
@@ -145,7 +150,7 @@ if ($_POST) {
         $journal_volume_number->setValue('journal_id', $journal_paper_id) ;
         $journal_volume_number->setValue('volume',$_POST['journal_volume']);
         $journal_volume_number->setValue('date',$_POST['journal_date']) ;
-        $journal_paper->setVolumeNumber($journal_volume_number); // FIXME: Ask Martin About
+        $journal_paper->setVolumeNumber($journal_volume_number); 
 
 
        // FIXME: Add this confirmation page option to Shereen's submit_verify page
