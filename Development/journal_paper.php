@@ -19,14 +19,16 @@ require_once('recaptcha/recaptchalib.php');
 require_once 'jquery_timer_lib.php';
 require_once 'jquery_blockui_lib.php';
 print_r($_POST['author_id']);
+
+?>
+
+<?php
 // Getting Journal ID from previous page
 $j_id = $_GET['journal_id'];
 $journal = new Journal($j_id);
 $j_name_display = $journal->getValue("name");
 
-?>
 
-<?php
 // Declaring Variables
 // Variables for using Recaptcha
 $recaptchaSettings = new RecaptchaSettings();
@@ -88,11 +90,12 @@ if ($_POST) {
 Fields marked with * are required <br><br>
 <?php
 $journal_paper = new JournalPaper();
+$fv = new FormValidator();
 if ($fv->hasErrors()) {
     $fv->listErrors();
 } else {
     // Save Form Data
-    
+
     $author = new Author();
     $journal_paper->setValue('journal_id', $j_id);
     $journal_paper->setValue('title', $_POST['journal_paper_title']);
