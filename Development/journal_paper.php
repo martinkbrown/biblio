@@ -28,12 +28,17 @@ $j_id = $_GET['journal_id'];
 $journal = new Journal($j_id);
 $j_name_display = $journal->getValue("name");
 
-
-// Declaring Variables
 // Variables for using Recaptcha
 $recaptchaSettings = new RecaptchaSettings();
-// Variable for Storing Journal once all data is Good to Go :)
 
+?>
+
+<h2>Add a Journal Paper</h2>
+Fields marked with * are required <br><br>
+
+<?php
+$journal_paper = new JournalPaper();
+$fv = new FormValidator();
 if ($_POST) {
     // Validating Data
     $fv = new FormValidator();
@@ -83,76 +88,52 @@ if ($_POST) {
 
     // If errors exist, inform user else save data and display confirmation page
 
-}
-
-?>
-<h2>Add a Journal Paper</h2>
-Fields marked with * are required <br><br>
-<?php
-$journal_paper = new JournalPaper();
-$fv = new FormValidator();
-if ($fv->hasErrors()) {
-    $fv->listErrors();
-} else {
-    // Save Form Data
-
-    $author = new Author();
-    $journal_paper->setValue('journal_id', $j_id);
-    $journal_paper->setValue('title', $_POST['journal_paper_title']);
-    $journal_paper->setValue('start_page', $_POST['journal_paper_startpg']);
-    $journal_paper->setValue('end_page', $_POST['journal_paper_endpg']);
-    $journal_paper->setValue('create_date', $_POST['journal_date']);
-    $journal_paper->setValue('approved', 0);
-    $journal_paper->setValue('volume',$_POST['journal_volume']);
-
-    if ($_POST['journal_number']) {
-        $journal_paper->setValue('number', $_POST['journal_number']);
-    } else { // If Number is Blank it must be automatically created
-        $journal_paper->setValue('number', '1');
-    }
-    $journal_paper->setValue('email',$_POST['user_email']);
-    $journal_paper->setValue('create_date', $_POST['journal_date']);
-
-    // FIXME: Determine Main Author ---> Release 2.4 would probably have specs for this
-
-    // Saving Brand New Authors that the DB didn't have
-    if (sizeof($_POST['journal_first_name']) > 0) {
-        foreach($_POST['journal_first_name'] as $key=>$firstname) {
-            $author = new Author();
-            $author->setValue('firstname', $firstname);
-            $author->setValue('lastname', $_POST['journal_last_name'][$key]);
-            $author->setValue('initial', $_POST['journal_middle_init'][$key]);
-            $journal_paper->addAuthor($author);
-        }
-    }
-
-    // Saving Authors that are Already in DB but need to be associated with this Journal Paper
-    if (sizeof($_POST['author_id']) > 0) {
-        foreach($_POST['author_id'] as $key=>$id) {
-            $author = new Author($id);
-            $journal_paper->addAuthor($author);
-        }
-    }
-
-    if($journal_paper->save()) {
-        $fv->addMessage("name", "Great! Journal Entry Saved");
-        $fv->listMessages();
-    } else {
-        $fv->addError("name","There was an error saving this Journal Paper");
+    if ($fv->hasErrors()) {
         $fv->listErrors();
-    }
-    if($author->save()) {
-        $fv->addMessage("name", "Great! Author Saved");
-        $fv->listMessages();
     } else {
-        $fv->addError("name","There was an error saving this author");
-        $fv->listErrors();
-    }
+        // Save Form Data
 
-    // Get IDs to create Author Journal Paper Class
-    $journal_paper_id = $journal_paper->getId();
-    $author_id = $author->getId();
-//
+        $author = new Author();
+        $journal_paper->setValue('journal_id', $j_id);
+        $journal_paper->setValue('title', $_POST['journal_paper_title']);
+        $journal_paper->setValue('start_page', $_POST['journal_paper_startpg']);
+        $journal_paper->setValue('end_page', $_POST['journal_paper_endpg']);
+        $journal_paper->setValue('create_date', $_POST['journal_date']);
+        $journal_paper->setValue('approved', 0);
+        $journal_paper->setValue('volume',$_POST['journal_volume']);
+
+        if ($_POST['journal_number']) {
+            $journal_paper->setValue('number', $_POST['journal_number']);
+        } else { // If Number is Blank it must be automatically created
+            $journal_paper->setValue('number', '1');
+        }
+        $journal_paper->setValue('email',$_POST['user_email']);
+        $journal_paper->setValue('create_date', $_POST['journal_date']);
+
+        // FIXME: Determine Main Author ---> Release 2.4 would probably have specs for this
+
+        // Saving Brand New Authors that the DB didn't have
+        if (sizeof($_POST['journal_first_name']) > 0) {
+            foreach($_POST['journal_first_name'] as $key=>$firstname) {
+                $author = new Author();
+                $author->setValue('firstname', $firstname);
+                $author->setValue('lastname', $_POST['journal_last_name'][$key]);
+                $author->setValue('initial', $_POST['journal_middle_init'][$key]);
+                $journal_paper->addAuthor($author);
+            }
+        }
+
+        // Saving Authors that are Already in DB but need to be associated with this Journal Paper
+        if (sizeof($_POST['author_id']) > 0) {
+            foreach($_POST['author_id'] as $key=>$id) {
+                $author = new Author($id);
+                $journal_paper->addAuthor($author);
+            }
+        }
+
+        // Get IDs to create Author Journal Paper Class
+        $journal_paper_id = $journal_paper->getId();
+        $author_id = $author->getId();
 //          Martin says that this will be done automatically when journal paper is saved
 //        // Saving Author Journal Paper
 //        $author_journal_paper = new AuthorJournalPaper();
@@ -161,21 +142,18 @@ if ($fv->hasErrors()) {
 //        // FIXME: Get main author Sihle
 //        $author_journal_paper->setValue('main_author', $author_id);
 
+        $journal_paper->setVolumeNumber($_POST['journal_volume'], $_POST['journal_date']);
 
-    // Saving Journal Volume Number
-    $journal_volume_number = new JournalVolumeNumber();
-    $journal_volume_number->setValue('number','journal_number') ;
-    $journal_volume_number->setValue('journal_id', $journal_paper_id) ;
-    $journal_volume_number->setValue('volume',$_POST['journal_volume']);
-    $journal_volume_number->setValue('date',$_POST['journal_date']) ;
-    $journal_paper->setVolumeNumber($journal_volume_number);
-
-
-    // FIXME: Add this confirmation page option to Shereen's submit_verify page
-    // Display confirmation page
-    $util = new Utilities();
-    $util->redirect("submit_journal_paper_confirm.php");
-
+        // FIXME: Add this confirmation page option to Shereen's submit_verify page
+        if($journal_paper->save()) {
+            // Display confirmation page
+            $util = new Utilities();
+            $util->redirect("submit_journal_paper_confirm.php");
+        } else {
+            $fv->addError("name","There was an error saving this Journal Paper");
+            $fv->listErrors();
+        }
+    }
 }
 ?>
 <form name ="frm_name" action="" method ="POST">
