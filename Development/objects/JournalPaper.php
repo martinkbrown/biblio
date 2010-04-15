@@ -53,10 +53,12 @@ class JournalPaper extends Recordset
         $this->loadByQuery($this->query . " ORDER BY " . $this->orderBy);
     }
 
-    function setVolumeNumber($volumeNumber)
+    function setVolumeNumber($volumeNumber,$date)
     {
         $this->setValue("number",$volumeNumber);
+        
         $this->volumeNumber = new JournalVolumeNumber($this->_journal_id,$this->volume,$volumeNumber);
+        $this->volumeNumber->setValue("date",mktime($date));
 
     }
     /**
