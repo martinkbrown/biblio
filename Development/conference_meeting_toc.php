@@ -22,7 +22,7 @@ $conf_meeting = new ConferenceMeeting();
 $conf_paper = new ConferencePaper();
 $nodataconference = true;
 $author = new Author();
-$conf_meeting->loadConferenceMeetingById($conf_meet_id);
+$conf_meeting->loadConferenceMeetingById($conf_meet_id);print_r($conf_meeting);
 $name = $conf_meeting->name;
 $startdate = $conf_meeting->start_date;
 $enddate = $conf_meeting->end_date;

@@ -25,7 +25,8 @@ class ConferenceMeeting extends Recordset {
                                 cm.conference_website, cm.isbn,
                                 cm.start_date, cm.end_date, cm.approved, p.id as publisher_id,
                                 p.name as publisher_name,
-                                c.name as conference_name
+                                c.name as conference_name,
+                                c.acronym as conference_acronym
                                 FROM (conference_meeting cm, conference c, country)
                                 LEFT JOIN state s ON cm.state_id = s.id
                                 LEFT JOIN publisher p ON cm.publisher_id = p.id
