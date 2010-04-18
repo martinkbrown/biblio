@@ -11,7 +11,7 @@
     <li><a href="main.php?page=view_conferences" target="main">Conferences</a></li>
     <li><a href="main.php?page=view_conference_meetings" target="main">Conference Meetings</a></li>
     <li><a href="main.php?page=view_conference_papers" target="main">Conference Papers</a></li>
-    <li>Publishers</li>
+    <li><a href="main.php?page=view_publishers" target="main">Publishers</a></li>
     <li><a href="main.php?page=view_states" target="main">States</a></li>
     <li><a href="main.php?page=view_countries" target="main">Countries</a></li>
 </ul>

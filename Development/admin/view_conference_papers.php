@@ -10,25 +10,26 @@ require_once FRONT_END . OBJECTS . 'ConferencePaper.php';
 require_once FRONT_END . OBJECTS . 'Country.php';
 require_once FRONT_END . OBJECTS . 'AdminConferencePaperGrid.php';
 
-$cp = new ConferencePaper("SELECT * FROM conference_paper ORDER BY name");
+if($delete)
+{
+    $cp->delete($ids);
+}
+
+$cp = new ConferencePaper();
 
 $country = new Country();
 $country->loadCountries();
 
 $grid = new AdminConferencePaperGrid();
-$grid->setColumnTitle("name", "ConferencePaper");
-$grid->setColumnTitle("abbreviation", "ConferencePaper Code");
-$grid->setColumnTitle("country_name", "Country");
-$grid->setColumnTitle("options", "Options");
+$grid->setColumnTitle("_title", "Title");
+$grid->setColumnTitle("_source", "Conference Meeting");
+$grid->setColumnTitle("_start_page", "Pages");
+$grid->setColumnTitle("_create_date", "Create Date");
+$grid->setColumnTitle("_email", "Email");
+$grid->setColumnTitle("_approved", "Email");
 $grid->setGridTitles();
 $grid->setResultsPerPage($adminSettings->resultsPerPage);
 $grid->setGridSelect();
-
-if($delete)
-{
-    $cp->delete($ids);
-    $cp = new ConferencePaper("SELECT * FROM conference_paper ORDER BY name");
-}
 
 $dd = new DropDownList('name');
 $dd->setFieldName("country_id");
@@ -37,22 +38,22 @@ $dd->setExtraValues(array("0"=>""));
 
 if($name)
 {
-    $cp->loadConference PapersByKeyword($name);
+    $cp->loadConferencePapersByKeyword($name);
 }
 
 if($country_id)
 {
-    $cp->loadConference PapersByCountryId($country_id);
+    $cp->loadConferencePapersByCountryId($country_id);
 }
 
 $grid->createGridFromRecordset($cp);
 
 ?>
 
-<form name="search_Conference Papers" method="POST" action="main.php?page=view_Conference Papers">
+<form name="search_conference_papers" method="POST" action="main.php?page=view_conference_papers">
     <table>
         <tr>
-            <td>ConferencePaper Name</td>
+            <td>Conference Paper Name</td>
             <td>
                 <input name="name" type="text" value="<?php echo $cp->getFormValue('name'); ?>"/>
             </td>
@@ -71,7 +72,7 @@ $grid->createGridFromRecordset($cp);
     </table>
 </form>
 
-<a href="main.php?page=edit_conference_paper">Click here to add a ConferencePaper</a><br/>
+<a href="main.php?page=edit_conference_paper">Click here to add a Conference Paper</a><br/><br/>
 
 <form name="view_Conference Papers" method="POST" action="main.php?page=view_Conference Papers" onsubmit="return confirm('Are you sure you want to DELETE the selected Conference Papers?')">
 

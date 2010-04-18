@@ -48,7 +48,19 @@ class ConferencePaper extends Recordset {
     function ConferencePaper($id=0)
     {
         $id = (int) $id;
-        parent::Recordset($this->query . " AND cp.id = $id","conference_paper");
+
+        if($id) $this->query .= " AND cp.id = $id";
+        parent::Recordset($this->query . " ORDER BY " . $this->orderBy,"conference_paper");
+    }
+
+    function loadConferencePapersByKeyword($keyword)
+    {
+        $sql =& sql();
+        $keyword = $sql->escape($keyword);
+
+        $this->query .= " AND .cp.title LIKE '%{$keyword}%'";
+
+        $this->loadByQuery($this->query . " ORDER BY " . $this->orderBy);
     }
 
     function getConferencePapersByAuthorId($author_id)

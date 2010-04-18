@@ -1,4 +1,4 @@
-<h2>View States</h2>
+<h2>View Conference Meetings</h2>
 
 <?php
 /*
