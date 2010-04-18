@@ -118,7 +118,7 @@ class Recordset
 
             foreach($this->foreignValues as $key=>$value)
             {
-                $this->values[$key] = "";
+                $this->foreignValues[$key] = "";
             }
 
             $this->id = null;
