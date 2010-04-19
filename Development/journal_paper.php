@@ -54,7 +54,6 @@ if ($_POST) {
     $fv->isNull($_POST['journal_date'], 'Date');
     foreach($_POST['journal_first_name'] as $key=>$firstname) {
         $fv->isNull($firstname, 'First Name');
-        $fv->isNull($_POST['journal_middle_init'][$key], 'Middle Initial');
         $fv->isNull($_POST['journal_last_name'][$key], 'Last Name');
     }
 
@@ -68,6 +67,12 @@ if ($_POST) {
         $fv->violatesDbConstraints('journal_paper', 'number', $_POST['journal_number'], 'Number');
     }
     // Validate that start page is less than end page
+    if ($fv->isPositiveNumber('Start Page', $_POST['journal_paper_startpg'])) {
+        $fv->addError('Start Page', 'Start page must be a positive number');
+    }
+    if ($fv->isPositiveNumber('End Page', $_POST['journal_paper_endtpg'])) {
+        $fv->addError('End Page', 'End page must be a positive number');
+    }
     if ($_POST['journal_paper_startpg'] > $_POST['journal_paper_endpg'] ) {
         $fv->addError('Start Page', 'Start page must be less than End Page');
     }

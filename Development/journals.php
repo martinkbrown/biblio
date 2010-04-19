@@ -7,7 +7,7 @@ require_once 'header.php';
 require_once LIB . 'Grid.php';
 require_once OBJECTS . 'Journal.php';
 require_once OBJECTS . 'JournalGrid.php';
-
+// echo $_POST['journal_name']
 ?>
 
 <h2>Journals</h2>
@@ -17,7 +17,7 @@ require_once OBJECTS . 'JournalGrid.php';
     <table>
         <tr>
             <td><b>Search Journals</b></td>
-            <td> <input type= "text" name= "journal_name" value="<?php echo $_POST['journal_name']?>"/> </td>
+            <td> <input type= "text" name= "journal_name" value="<?php echo htmlspecialchars($_GET['journal_name'])?>"/></td>
             <td> <input type="submit" name="Search" value="Search"/>  </td>
         </tr>
     </table>
