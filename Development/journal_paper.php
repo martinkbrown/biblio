@@ -71,7 +71,7 @@ if ($_POST) {
     $fv->isPositiveNumber('End Page', $_POST['journal_paper_endpg']);
         
     if ($_POST['journal_paper_startpg'] > $_POST['journal_paper_endpg'] ) {
-        $fv->addError('Start Page', 'Start page must be less than End Page');
+        $fv->addError('Start Page', 'Start page must be less than or equal to the End Page');
     }
     $fv->isPositiveNumber('Volume',$_POST['journal_volume']);
 
