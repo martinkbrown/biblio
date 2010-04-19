@@ -123,7 +123,7 @@ class JournalPaper extends Recordset
 
             $main_author = false;
 
-            $acp->save();
+            $ajp->save();
         }
     }
 }
