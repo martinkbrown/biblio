@@ -67,12 +67,9 @@ if ($_POST) {
         $fv->violatesDbConstraints('journal_paper', 'number', $_POST['journal_number'], 'Number');
     }
     // Validate that start page is less than end page
-    if ($fv->isPositiveNumber('Start Page', $_POST['journal_paper_startpg'])) {
-        $fv->addError('Start Page', 'Start page must be a positive number');
-    }
-    if ($fv->isPositiveNumber('End Page', $_POST['journal_paper_endtpg'])) {
-        $fv->addError('End Page', 'End page must be a positive number');
-    }
+    $fv->isPositiveNumber('Start Page', $_POST['journal_paper_startpg']); 
+    $fv->isPositiveNumber('End Page', $_POST['journal_paper_endpg']);
+        
     if ($_POST['journal_paper_startpg'] > $_POST['journal_paper_endpg'] ) {
         $fv->addError('Start Page', 'Start page must be less than End Page');
     }
@@ -191,7 +188,7 @@ if ($_POST) {
             <td>First Name*
                 <input class="author_item"  type= "text" name= "journal_first_name[]" size="33" value="<?php echo $_POST ['journal_first_name'][0] ?>"/>
             </td>
-            <td> Middle Initial*
+            <td> Middle Initial
                 <input class="author_item" type= "text" name= "journal_middle_init[]" size="1" value="<?php echo $_POST ['journal_middle_init'][0] ?>"/>
             </td>
             <td> Last Name*
