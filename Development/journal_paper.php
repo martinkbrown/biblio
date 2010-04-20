@@ -18,7 +18,6 @@ require_once 'jquery_autocomplete_lib.php';
 require_once('recaptcha/recaptchalib.php');
 require_once 'jquery_timer_lib.php';
 require_once 'jquery_blockui_lib.php';
-print_r($_POST['author_id']);
 
 ?>
 
@@ -58,7 +57,7 @@ if ($_POST) {
             $fv->isNull($_POST['journal_last_name'][$key], 'Last Name');
         }
     }
-    
+
     // Check if violates DB Contraints
     $fv->violatesDbConstraints('journal_paper', 'title', $_POST['journal_paper_title'], 'Title');
     $fv->violatesDbConstraints('journal_paper', 'start_page', $_POST['journal_paper_startpg'], 'Start Page');
@@ -76,10 +75,6 @@ if ($_POST) {
         $fv->addError('Start Page', 'Start page must be less than or equal to the End Page');
     }
     $fv->isPositiveNumber('Volume',$_POST['journal_volume']);
-
-//    $fv->violatesDbConstraints('author','firstname', $_POST['journal_first_name[0]'], 'First Name');
-//    $fv->violatesDbConstraints('author','initial',$_POST['journal_middle_init[0]'],$_POST['journal_middle_init[0]']);
-//    $fv->violatesDbConstraints('author','lastname',$_POST['journal_last_name[0]'],$_POST['journal_last_name[0]']);
 
     $fv->isValidCaptcha($recaptchaSettings->private_key);
 
@@ -114,36 +109,27 @@ if ($_POST) {
         $journal_paper->setValue('email',$_POST['user_email']);
         $journal_paper->setValue('create_date', $_POST['journal_date']);
 
-        // FIXME: Determine Main Author ---> Release 2.4 would probably have specs for this
-
-        // Saving Brand New Authors that the DB didn't have
+        // Saving All Authors 
         if (sizeof($_POST['journal_first_name']) > 0) {
             foreach($_POST['journal_first_name'] as $key=>$firstname) {
-                $author = new Author();
-                $author->setValue('firstname', $firstname);
-                $author->setValue('lastname', $_POST['journal_last_name'][$key]);
-                $author->setValue('initial', $_POST['journal_middle_init'][$key]);
+                if (is_numeric($firstname)) {
+                    $author = new Author($firstname);
+                }
+                else {
+                    $author->setValue('firstname', $firstname);
+                    $author->setValue('lastname', $_POST['journal_last_name'][$key]);
+                    $author->setValue('initial', $_POST['journal_middle_init'][$key]);
+                }
                 $journal_paper->addAuthor($author);
             }
         }
 
         // Saving Authors that are Already in DB but need to be associated with this Journal Paper
-        if (sizeof($_POST['author_id']) > 0) {
-            foreach($_POST['author_id'] as $key=>$id) {
-                $author = new Author($id);
-                $journal_paper->addAuthor($author);
-            }
-        }
 
-        // Get IDs to create Author Journal Paper Class
-        $journal_paper_id = $journal_paper->getId();
-        $author_id = $author->getId();
-//          Martin says that this will be done automatically when journal paper is saved
-//        // Saving Author Journal Paper
-//        $author_journal_paper = new AuthorJournalPaper();
-//        $author_journal_paper->setValue('author_id', $author_id);
-//        $author_journal_paper->setValue('journal_paper_id', $journal_paper_id);
-//        //        $author_journal_paper->setValue('main_author', $author_id);
+// ? Author Journal Paper
+//        // Get IDs to create Author Journal Paper Class
+//        $journal_paper_id = $journal_paper->getId();
+//        $author_id = $author->getId();
 
         $journal_paper->setVolumeNumber($_POST['journal_volume'], $_POST['journal_date']);
 
@@ -420,7 +406,7 @@ if ($_POST) {
 
                                 $(it).parents("tr").find("td[class!='author_label']").remove();
 
-                                newHTML = '<td><input class="author_ids" type="hidden" name="author_id[]" value="'+($(this).attr('id').substring(2))+'"/>'+name+"</td><td class=\"author_label\"><a href=\"javascript:;\" onClick=\"removeFormField('"+($(tr).attr('id'))+"');\">Remove</a></td>";
+                                newHTML = '<td><input class="author_ids" type="hidden" name="journal_first_name[]" value="'+($(this).attr('id').substring(2))+'"/>'+name+"</td><td class=\"author_label\"><a href=\"javascript:;\" onClick=\"removeFormField('"+($(tr).attr('id'))+"');\">Remove</a></td>";
 
                                 $(tr).append(newHTML);
                             });
