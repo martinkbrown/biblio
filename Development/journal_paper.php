@@ -52,11 +52,13 @@ if ($_POST) {
     $fv->isNull($_POST['journal_paper_endpg'], 'End Page');
     $fv->isNull($_POST['journal_volume'], 'Volume');
     $fv->isNull($_POST['journal_date'], 'Date');
-    foreach($_POST['journal_first_name'] as $key=>$firstname) {
-        $fv->isNull($firstname, 'First Name');
-        $fv->isNull($_POST['journal_last_name'][$key], 'Last Name');
+    if (sizeof($_POST['journal_first_name']) > 0) {
+        foreach($_POST['journal_first_name'] as $key=>$firstname) {
+            $fv->isNull($firstname, 'First Name');
+            $fv->isNull($_POST['journal_last_name'][$key], 'Last Name');
+        }
     }
-
+    
     // Check if violates DB Contraints
     $fv->violatesDbConstraints('journal_paper', 'title', $_POST['journal_paper_title'], 'Title');
     $fv->violatesDbConstraints('journal_paper', 'start_page', $_POST['journal_paper_startpg'], 'Start Page');
@@ -67,9 +69,9 @@ if ($_POST) {
         $fv->violatesDbConstraints('journal_paper', 'number', $_POST['journal_number'], 'Number');
     }
     // Validate that start page is less than end page
-    $fv->isPositiveNumber('Start Page', $_POST['journal_paper_startpg']); 
+    $fv->isPositiveNumber('Start Page', $_POST['journal_paper_startpg']);
     $fv->isPositiveNumber('End Page', $_POST['journal_paper_endpg']);
-        
+
     if ($_POST['journal_paper_startpg'] > $_POST['journal_paper_endpg'] ) {
         $fv->addError('Start Page', 'Start page must be less than or equal to the End Page');
     }
@@ -141,8 +143,7 @@ if ($_POST) {
 //        $author_journal_paper = new AuthorJournalPaper();
 //        $author_journal_paper->setValue('author_id', $author_id);
 //        $author_journal_paper->setValue('journal_paper_id', $journal_paper_id);
-//        // FIXME: Get main author Sihle
-//        $author_journal_paper->setValue('main_author', $author_id);
+//        //        $author_journal_paper->setValue('main_author', $author_id);
 
         $journal_paper->setVolumeNumber($_POST['journal_volume'], $_POST['journal_date']);
 
