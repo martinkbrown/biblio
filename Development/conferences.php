@@ -50,12 +50,12 @@ $grid->setColumnTitle("_name","Name of Conference");
 //$conference->loadApprovedConferences();
 if($_GET['conf_name']!=""){
     $conference->loadConferencesByKeyword($_GET['conf_name']);
-    $conference->loadApprovedConferences();
+    //$conference->loadApprovedConferences();
 
 }
 if ($cname != ""){
     $conference->loadConferencesByFirstLetter($cname);
-    $conference->loadApprovedConferences();
+    //$conference->loadApprovedConferences();
 }
 
 $grid->createGridFromRecordset($conference);

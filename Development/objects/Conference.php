@@ -37,7 +37,7 @@ class Conference extends Recordset{
     {
         $sql =& sql();
         $keyword = basename($sql->escape($keyword));
-        $this->query .= " AND name REGEXP '[[:<:]]{$keyword}[[:>:]]'";
+        $this->query .= " AND name REGEXP '[[:<:]]{$keyword}[[:>:]]' AND (approved = 1) ";
         
         $this->loadByQuery($this->query . " ORDER BY name");
     }
@@ -51,7 +51,7 @@ class Conference extends Recordset{
         $sql =& sql();
         $letter = $sql->escape($letter);
 
-        $this->query .= " AND (acronym LIKE '{$letter}%')";
+        $this->query .= " AND (acronym LIKE '{$letter}%') AND (approved = 1)";
 
         $this->loadByQuery($this->query . " ORDER BY name");
     }
