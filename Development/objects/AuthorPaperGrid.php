@@ -55,7 +55,14 @@ class AuthorPaperGrid extends Grid
             $name = $auth['firstname'];
             $name .= $auth['initial'] ? " " . $auth['initial'] : "";
             $name .= " " . $auth['lastname'];
-            $authors .=  "<a href=\"author_papers.php?author_id=$key\">$name</a>&nbsp;&nbsp;&nbsp;";
+            if($key != $_GET['author_id'])
+            {
+                $authors .=  "<a href=\"author_papers.php?author_id=$key\">$name</a>&nbsp;&nbsp;&nbsp;";
+            }
+            else
+            {
+                $authors .= $name . "&nbsp;&nbsp;&nbsp;";
+            }
         }
 
         return "$year $title<br/>$authors<br/>$source $pages<br/><br/>";
