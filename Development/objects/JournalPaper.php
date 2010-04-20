@@ -40,7 +40,15 @@ class JournalPaper extends Recordset
     function JournalPaper($id=0)
     {
         $id = (int) $id;
-        parent::Recordset($this->query . " AND jp.id = $id","journal_paper");
+        if($id)
+        {
+            $this->query .= " AND jp.id = $id";
+            parent::Recordset($this->query,"journal_paper");
+        }
+        else
+        {
+            parent::Recordset($id,"journal_paper");
+        }
         $this->volumeNumber = new JournalVolumeNumber($this->_journal_id,$this->volume,$this->number);
     }
 

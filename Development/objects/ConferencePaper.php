@@ -49,8 +49,15 @@ class ConferencePaper extends Recordset {
     {
         $id = (int) $id;
 
-        if($id) $this->query .= " AND cp.id = $id";
-        parent::Recordset($this->query . " ORDER BY " . $this->orderBy,"conference_paper");
+        if($id) 
+        {
+            $this->query .= " AND cp.id = $id";
+            parent::Recordset($this->query . " ORDER BY " . $this->orderBy,"conference_paper");
+        }
+        else
+        {
+            parent::Recordset($id,"conference_paper");
+        }
     }
 
     function loadConferencePapersByKeyword($keyword)
