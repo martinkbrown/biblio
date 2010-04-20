@@ -161,12 +161,6 @@ if($_POST)
             for ($i=1;$i<$counter;$i++){
                 echo '<tr class="author_row" id ="'.$i.'"><td class="author_label"><b>Coauthor </b></td><td><b>First Name*</b><input class="author_item" type ="text" name ="first_name[]" size ="27" id="fn" value ='.$_POST['first_name'][$i].' /></td><td><b>Middle Inital</b><input type ="text" name ="mid_initial[]" size ="10" id="mi" value='.$_POST['mid_initial'][$i].' /></td><td><b>Last Name*</b><input class="author_item" type ="text" name ="last_name[]" size ="27" id="ln" value='.$_POST['last_name'][$i].' /></td><td><a href="javascript:;" onClick="removeFormField('.$i.');">Remove</a></td></tr>';
             }
-            /*//echo '<tr id ="'.$i.'"><td><b>Coauthor'.$i.'</b></td><td><b>First Name*</b><input type ="text" name ="first_name[]" size ="27" id="fn" value="<?php echo ($_POST['first_name']['.$i.']); ?>" /></td><td><b>Middle Inital</b><input type ="text" name ="mid_initial[]" size ="10" id="mi" value="<?php echo ($_POST['mid_initial']['.$i.']); ?>"/></td><td><b>Last Name*</b><input type ="text" name ="last_name[]" size ="27" id="ln" value="<?php echo ($_POST['last_name']['.$i.']); ?>"/></td><td><a href="javascript:void;" onClick="removeFormField('.$i.');">Remove</a></td></tr>';
-            }
-            /$count = count($_POST['first_name']);
-            //for (i=1;i<count;i++){
-             //   echo ('<tr id ="'+counter+'"><td><b>Coauthor'+i+'</b></td><td><b>First Name*</b><input type ="text" name ="first_name[]" size ="27" id="fn" value="<?php echo ($_POST['first_name']['+i+']); ?>" /></td><td><b>Middle Inital</b><input type ="text" name ="mid_initial[]" size ="10" id="mi" value="<?php echo ($_POST['mid_initial']['+i+']); ?>"/></td><td><b>Last Name*</b><input type ="text" name ="last_name[]" size ="27" id="ln" value="<?php echo ($_POST['last_name']['+i+']); ?>"/></td><td><a href="javascript:void;" onClick="removeFormField('+i+');">Remove</a></td></tr>');
-             //    }*/
          ?>
             </td>
         </tr>
@@ -180,11 +174,11 @@ if($_POST)
         </tr>
         <tr>
             <td><b>End Page*</b></td>
-            <td><input type ="text" name ="end_pg" size="40" value="<?php echo $conference_paper->getFormValue('end_pg'); ?>"/></td>
+            <td><input type ="text" name ="end_pg" size="40" value="<?php echo  $conference_paper->getFormValue('end_pg'); ?>"/></td>
         </tr>
         <tr>
             <td><b>Email*</b></td>
-            <td><input type ="text" name ="email" size="40" value="<?php echo $conference_paper->getFormValue('email'); ?>"/></td>
+            <td><input type ="text" name ="email" size="40" value="<?php echo $_POST['email'];  ?>"/></td>
         </tr>
         <tr>
             <td><b>Confirm Email*</b></td>
