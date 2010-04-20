@@ -61,9 +61,8 @@ if($_POST)
         $fv->violatesDbConstraints('author','lastname', $value, 'Last Name');
     }
 
-    $fv->violatesDbConstraints('conference_paper', 'title', $conference_paper->getFormValue('paper_title'),'Paper Tile');
+    $fv->violatesDbConstraints('conference_paper', 'title', $conference_paper->getFormValue('paper_title'),'Paper Title');
     $fv->violatesDbConstraints('conference_session', 'name', $conf_session->getFormValue('conf_sess_name'),'Session Name');
-    $fv->violatesDbConstraints('conference_paper', 'title', $conference_paper->getFormValue('paper_title'),'Paper Tile');
     $fv->violatesDbConstraints('conference_paper', 'start_page', $conference_paper->getFormValue('start_pg'),'Start Page');
     $fv->violatesDbConstraints('conference_paper', 'end_page', $conference_paper->getFormValue('end_pg'),'End Page');
     $fv->isANumber('start_pg', $conference_paper->getFormValue('start_pg'));
@@ -115,6 +114,7 @@ if($_POST)
             $conf_session->id ="";
             $conf_session->save();
         }
+        $conference_paper->setValue('conference_session_id',$conf_session->id);
         $conference_paper->setValue('create_date', $submit_date);
         $conference_paper->save();
         $util = new Utilities();
