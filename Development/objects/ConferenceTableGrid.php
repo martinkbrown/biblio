@@ -16,15 +16,18 @@ class ConferenceTableGrid extends Grid {
 
     function handle_name($row){
         $conf_id = $_GET['conference_id'];
-        return '<a href="conference_meeting_toc.php?big_conf='.$conf_id.'&conference_meeting_id='.$row['id'].'">'.$row['name'].'</a>';
+        return '<a href="conference_meeting_toc.php?conference_meeting_id='.$row['id'].'">'.$row['name'].'</a>';
     }
 
     function handle_city($row){
+       
         if ($row['state_name'] == ""){
             return '<a>'.$row['city'].", ".$row['country_name'].'</a>';
         }
-        else
+        else{
         return '<a>'.$row['city'].", ".$row['state_name'].", ".$row['country_name'].'</a>';
+        //print_r($row);
+        }
     }
 
     function handle_start_date($row){

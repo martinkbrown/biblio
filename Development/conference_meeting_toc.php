@@ -8,13 +8,11 @@ require_once FRONT_END . OBJECTS . 'ConferenceMeeting.php';
 require_once FRONT_END . OBJECTS . 'ConferencePaper.php';
 require_once FRONT_END . OBJECTS . 'Conference.php';
 require_once LIB . 'Date.php';
-$conference = new Conference();
-$conf_id = $_GET['big_conf'];
-$conference->loadById($conf_id);
+//$conference = new Conference();
+//$conf_id = $_GET['big_conf'];
+//$conference->loadById($conf_id);
 require_once OBJECTS . 'Author.php';
-$conf_meet_id = (int)$_GET['conference_meeting_id'];
-echo '<h2>'. $conference->name .'('.$conference->acronym.')'.'</h2>';
-echo '<a href="conference_paper.php?big_conf='.$conf_id.'&conf_meet_id='.$conf_meet_id.'">Add new Conference Paper </a>';
+
 
 
 
@@ -22,7 +20,12 @@ $conf_meeting = new ConferenceMeeting();
 $conf_paper = new ConferencePaper();
 $nodataconference = true;
 $author = new Author();
-$conf_meeting->loadConferenceMeetingById($conf_meet_id);print_r($conf_meeting);
+$conf_meet_id = (int)$_GET['conference_meeting_id'];
+$conf_meeting->loadConferenceMeetingById($conf_meet_id);
+
+echo '<h2>'.  $conf_meeting->_conference_name  .'('.$conf_meeting->_conference_acronym.')'.'</h2>';
+echo '<a href="conference_paper.php?big_conf='.$conf_id.'&conf_meet_id='.$conf_meet_id.'">Add new Conference Paper </a>';
+ 
 $name = $conf_meeting->name;
 $startdate = $conf_meeting->start_date;
 $enddate = $conf_meeting->end_date;
@@ -82,7 +85,7 @@ do
 }while($conf_session->next());
 
 if ($nodataconference == true)
-    echo "No conference data";
+    echo "No results found";
 
 
 
