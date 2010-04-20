@@ -58,7 +58,7 @@ class ConferencePaper extends Recordset {
         $sql =& sql();
         $keyword = $sql->escape($keyword);
 
-        $this->query .= " AND .cp.title LIKE '%{$keyword}%'";
+        $this->query .= " AND cp.title LIKE '%{$keyword}%'";
 
         $this->loadByQuery($this->query . " ORDER BY " . $this->orderBy);
     }

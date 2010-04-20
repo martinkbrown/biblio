@@ -53,6 +53,16 @@ class JournalPaper extends Recordset
         $this->loadByQuery($this->query . " ORDER BY " . $this->orderBy);
     }
 
+    function loadJournalPapersByKeyword($keyword)
+    {
+        $sql =& sql();
+        $keyword = $sql->escape($keyword);
+
+        $this->query .= " AND jp.title LIKE '%{$keyword}%'";
+
+        $this->loadByQuery($this->query . " ORDER BY " . $this->orderBy);
+    }
+
     function setVolumeNumber($volumeNumber,$date)
     {
         $this->setValue("number",$volumeNumber);

@@ -18,7 +18,7 @@ $grid->setColumnTitle("_acronym", "Acronym");
 $grid->setColumnTitle("_approved", "Approved");
 $grid->setColumnTitle("_contact", "Contact");
 $grid->setColumnTitle("_updated", "Updated");
-$grid->setColumnTitle("options", "Options");
+$grid->setColumnTitle("_options", "Options");
 $grid->setGridTitles();
 $grid->setGridSelect();
 $grid->setResultsPerPage($adminSettings->resultsPerPage);

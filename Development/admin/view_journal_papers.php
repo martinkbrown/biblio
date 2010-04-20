@@ -7,60 +7,41 @@
  */
 
 require_once FRONT_END . OBJECTS . 'JournalPaper.php';
-require_once FRONT_END . OBJECTS . 'Country.php';
 require_once FRONT_END . OBJECTS . 'AdminJournalPaperGrid.php';
-
-$jp = new JournalPaper("SELECT * FROM jp ORDER BY name");
-
-$country = new Country();
-$country->loadCountries();
-
-$grid = new AdminJournalPaperGrid();
-$grid->setColumnTitle("name", "JournalPaper");
-$grid->setColumnTitle("abbreviation", "JournalPaper Code");
-$grid->setColumnTitle("country_name", "Country");
-$grid->setColumnTitle("options", "Options");
-$grid->setGridTitles();
-$grid->setResultsPerPage($adminSettings->resultsPerPage);
-$grid->setGridSelect();
 
 if($delete)
 {
     $jp->delete($ids);
-    $jp = new JournalPaper("SELECT * FROM jp ORDER BY name");
 }
 
-$dd = new DropDownList('name');
-$dd->setFieldName("country_id");
-$dd->setSelectedValues($country_id);
-$dd->setExtraValues(array("0"=>""));
+$jp = new JournalPaper();
+
+$grid = new AdminJournalPaperGrid();
+$grid->setColumnTitle("_title", "Title");
+$grid->setColumnTitle("_source", "Journal Meeting");
+$grid->setColumnTitle("_start_page", "Pages");
+$grid->setColumnTitle("_create_date", "Create Date");
+$grid->setColumnTitle("_email", "Email");
+$grid->setColumnTitle("_approved", "Email");
+$grid->setGridTitles();
+$grid->setResultsPerPage($adminSettings->resultsPerPage);
+$grid->setGridSelect();
 
 if($name)
 {
-    $jp->loadJournal PapersByKeyword($name);
-}
-
-if($country_id)
-{
-    $jp->loadJournal PapersByCountryId($country_id);
+    $jp->loadJournalPapersByKeyword($name);
 }
 
 $grid->createGridFromRecordset($jp);
 
 ?>
 
-<form name="search_jps" method="POST" action="main.php?page=view_jps">
+<form name="search_journal_papers" method="POST" action="main.php?page=view_journal_papers">
     <table>
         <tr>
-            <td>JournalPaper Name</td>
+            <td>Journal Paper Name</td>
             <td>
                 <input name="name" type="text" value="<?php echo $jp->getFormValue('name'); ?>"/>
-            </td>
-        </tr>
-        <tr>
-            <td>Country</td>
-            <td>
-                <?php echo $dd->getDropDownFromRecordset($country); ?>
             </td>
         </tr>
         <tr>
@@ -71,9 +52,9 @@ $grid->createGridFromRecordset($jp);
     </table>
 </form>
 
-<a href="main.php?page=edit_jp">Click here to add a JournalPaper</a><br/>
+<a href="main.php?page=edit_journal_paper">Click here to add a Journal Paper</a><br/><br/>
 
-<form name="view_jps" method="POST" action="main.php?page=view_jps" onsubmit="return confirm('Are you sure you want to DELETE the selected Journal Papers?')">
+<form name="view_Journal Papers" method="POST" action="main.php?page=view_Journal Papers" onsubmit="return confirm('Are you sure you want to DELETE the selected Journal Papers?')">
 
         <?php
 
