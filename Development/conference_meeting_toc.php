@@ -70,7 +70,7 @@ $no_session_paper->loadByQuery($query);
 do
 {
           if ($no_session_paper->id){
-              echo '<tr><td>'."NO SESSION".'</td></tr>';
+              echo '<tr><td>'."Papers not in a session".'</td></tr>';
               print_toc($conf_meet_id,$author,$no_session_paper);
               $nodataconference = false;
           }
