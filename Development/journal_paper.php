@@ -113,8 +113,10 @@ if ($_POST) {
         $journal_paper->setValue('create_date', $_POST['journal_date']);
 
         // Saving All Authors
+        
         if (sizeof($_POST['journal_first_name']) > 0) {
             foreach($_POST['journal_first_name'] as $key=>$firstname) {
+                
                 if (is_numeric($firstname)) {
                     echo $firstname;
                     $author = new Author($firstname);

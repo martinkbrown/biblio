@@ -98,6 +98,7 @@ class JournalPaper extends Recordset
         {
             $this->saveAuthors();
             $this->volumeNumber->save();
+            return true;
         }
 
         else return false;
