@@ -198,7 +198,7 @@ class Grid {
             $this->sortBy = $keys[0];
         }
 
-        $this->grid = "<table>\n";
+        $this->grid = "<table cellpading=\"0px\" cellspacing=\"0px\">\n";
 
         $stringOfColumns = "\\$" . $this->sortBy . "," . $this->sortOrder . "," . SORT_STRING . ",\\$" . "id";
 
@@ -260,7 +260,7 @@ class Grid {
                 //build the string for the handler method
                 $method = "handle" . strtoupper($key[0]) . substr($key,1);
 
-                $this->grid .= "\t\t<td>";
+                $this->grid .= "\t\t<td class =\"inner_cell\">";
 
                 //check if a handler exists for the specified column
                 if(method_exists($this, $method))
