@@ -403,7 +403,7 @@ if ($_POST) {
 
                                 $(it).parents("tr").find("td[class!='author_label']").remove();
 
-                                newHTML = '<td><input class="author_ids" type="hidden" name="journal_first_name[]" value="'+($(this).attr('id').substring(2))+'"/>'+name+"</td><td class=\"author_label\"><a href=\"javascript:;\" onClick=\"removeFormField('"+($(tr).attr('id'))+"');\">Remove</a></td>";
+                                newHTML = '<td><input class="author_ids" type="hidden" name="journal_first_name[]" value="'+($(this).attr('id').substring(2))+'"/>'+name+"</td><td class=\"author_label\"><a href=\"javascript:;\" onClick=\"removeFormField('"+($(tr).attr('id'))+"');\">Remove</a><input name=\"journal_last_name[]\"/><input name=\"journal_middle_init\"/></td>";
 
                                 $(tr).append(newHTML);
                             });
