@@ -167,6 +167,21 @@ class Recordset
 		}*/
 		$this->pk = "id";
 	}
+
+        function loop()
+        {
+            if(!$this->id)  return false;
+
+            if(!$this->looping)
+            {
+                $this->looping = true;
+                return true;
+            }
+            else
+            {
+                return $this->next();
+            }
+        }
 	
 	/**
 	 * recordset::next() uses the local result resource to get the next
