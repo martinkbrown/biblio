@@ -14,10 +14,11 @@ $conf = new Conference($conf_id);
 $conf_name_display = $conf->getValue("name");
 $conf_acrynm_display = $conf->getValue("acronym");
 ?>
-
-<h2><?php echo ($conf_name_display); echo " ("; echo ($conf_acrynm_display); echo ")";?> </h2>
+<div class ="conf_back">
+    <br>
+    <span class="solid_writting"><?php echo ($conf_name_display); echo " ("; echo ($conf_acrynm_display); echo ")";?> </span>
 <?php 
-echo "<a href=submit_conference.php?conf_id=$conf_id href= >Add a conference meeting to $conf_name_display</a><br></br>";
+echo "<br></br><a href=submit_conference.php?conf_id=$conf_id href= >Add a conference meeting to $conf_name_display</a><br></br>";
 ?>
 
 <?php
@@ -34,5 +35,5 @@ $grid->createGridFromRecordset($conf_meeting);
 //loadConferenceMeetingById($_GET['id']){
 
 ?>
-
+</div>
 

@@ -38,9 +38,9 @@ $conf_session = new ConferenceSession($_POST['conf_sess_id']); //get only the co
 //$conf_session->loadByQuery($query);
 
 echo $conf_session->name; // prove i got the right conference
-
-echo "<h2>Add a Conference Paper</h2>";
-echo "<h4>Fields marked with * are required</h4>";
+echo '<div class ="conf_back">';
+echo '<br><span class="solid_writting">Add a Conference Paper</span>';
+echo "<br><b>Fields marked with * are required</b>";
 
 
 if($_POST)
@@ -125,7 +125,7 @@ if($_POST)
 
 <form name ="frm_name" method="POST">
     <!---this creates the table for the layout of the form--->
-    <table>
+    <table> <br>
         <tr>
             <td><b>Conference Meeting</b></td>
             <td>
@@ -198,6 +198,7 @@ if($_POST)
         </tr>
     </table>
 </form>
+</div>
 <script>
 
 var counter = <?php if (count($_POST['first_name']) == 0) echo 1; else echo count($_POST['first_name']);  ?>;

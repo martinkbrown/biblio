@@ -25,8 +25,10 @@ $conf_meet_id = (int)$_GET['conference_meeting_id'];
 $conf_meeting->loadConferenceMeetingById($conf_meet_id);
 $zero = 0;
 
-echo '<h2>'.  $conf_meeting->_conference_name  .'('.$conf_meeting->_conference_acronym.')'.'</h2>';
-echo '<a href="conference_paper.php?big_conf='.$conf_id.'&conf_meet_id='.$conf_meet_id.'">Add new Conference Paper </a>';
+echo '<div class ="conf_back">';
+echo '<br>';
+echo '<span class="strong_writting">'.  $conf_meeting->_conference_name  .'('.$conf_meeting->_conference_acronym.')'.'</span>';
+echo '<p><a href="conference_paper.php?big_conf='.$conf_id.'&conf_meet_id='.$conf_meet_id.'">Add new Conference Paper </a></p>';
  
 $name = $conf_meeting->name;
 $startdate = $conf_meeting->start_date;
@@ -106,6 +108,7 @@ if ($nodataconference == true)
 echo '</table>';
 ;
 
+echo '</div>';
 
 //echo $conf_session->name; prove i got the right conference
 ?>

@@ -12,8 +12,9 @@ $grid->setColumnTitle("_name","Name");
 $grid->createGridFromRecordset($author);
 
 ?>
-
-<h2>Authors</h2>
+<div class ="conf_back">
+    <br>
+<span class="solid_writting">Authors</span> <br>
 
 <form name="author_search" method="GET">
     <table>
@@ -45,3 +46,4 @@ $grid->createGridFromRecordset($author);
 echo $grid->getGrid();
 
 ?>
+</div>

@@ -16,10 +16,13 @@
         <link rel="stylesheet" type="text/css" href="style.css" />
     </head>
     <body>
-        <h1 id="title"><a href="<?php echo $siteSettings->siteUrl; ?>"><?php echo $siteSettings->siteTitle; ?></a></h1>
+        <div id="header_table">
         <table>
             <tr>
-                <td>
+                <td id="bar">
+                    <span id="title"><a href="<?php echo $siteSettings->siteUrl; ?>"><?php echo $siteSettings->siteTitle; ?></a></span>
+                </td>
+                <td id ="conf_bar">
                     <a href="conferences.php">Conferences</a>
                 </td>
                 <td>
@@ -30,3 +33,4 @@
                 </td>
             </tr>
         </table>
+       </div>

@@ -17,7 +17,7 @@ require_once('recaptcha/recaptchalib.php');
 // Variables for using Recaptcha
 $recaptchaSettings = new RecaptchaSettings();
 // Variable for Storing Journal once all data is Good to Go :)
-
+echo '<div class ="conf_back">';
 if ($_POST) {
     // Validating Data
     $fv = new FormValidator();
@@ -63,11 +63,11 @@ if ($_POST) {
 
 ?>
 
-<h2>Add a Journal</h2>
-Fields marked with * are required <br>
+<br><span class="solid_writting">Add a Journal</span><br>
+<b>Fields marked with * are required </b>
 
 <form name ="frm_name" method ="POST">
-    <table>
+    <table> <br>
         <tr>
             <td>Journal Name*</td>
             <td>
@@ -99,3 +99,4 @@ Fields marked with * are required <br>
     </table>
 
 </form>
+</div>

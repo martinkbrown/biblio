@@ -15,6 +15,47 @@ root {
     display: block;
 }
 
+#bar
+{
+    border-right: solid thin white;
+    padding: 12px;
+}
+#conf_bar
+{
+    padding-left: 12px;
+}
+
+#header_table
+{
+    background-color: #a1bb4d ;
+    color : white;
+    padding-bottom: -10px;
+    border-right-style: groove;
+    border-left-style: groove;
+    border-bottom-style: groove;
+    border-top-style: groove;
+    border-right-color: #ffffff;
+    border-left-color: #ffffff;
+    border-bottom-color: #ffffff;
+    border-top-color: #ffffff;
+    border-right-width: 1px;
+    border-left-width: 1px;
+    border-bottom-width: 1px;
+    border-top-width: 1px;
+}
+#header_table a , #header_table a:link , #header_table a:visited
+{
+    text-decoration: none;
+    font-size: 18px;
+    color: white;
+}
+
+.conf_back
+{
+    background-color: white;
+    min-height: 500px;
+    padding-left: 86px;
+}
 .form_error
 {
     color:red;
@@ -27,10 +68,130 @@ root {
     font-weight: bold;
 }
 
-#title, #title a:visited, #title a:link, #title a:hover
+.center_table
+{
+    margin-left: 86px;
+    margin-top: 30px;
+    border-collapse:collapse;
+    border:1px solid gray;
+}
+
+.inner_cell
+{
+    border: solid thick;
+    border-right-style: groove;
+    border-left-style: groove;
+    border-bottom-style: groove;
+    border-top-style: groove;
+    border-right-color: #ffffff;
+    border-left-color: #ffffff;
+    border-bottom-color: #ffffff;
+    border-top-color: #ffffff;
+    border-right-width: 1px;
+    border-left-width: 1px;
+    border-bottom-width: 1px;
+    border-top-width: 1px;
+}
+
+.inner_cell a , .inner_cell a:link , .inner_cell a:visited
+{
+    border-collapse:collapse;
+    text-decoration: none;
+    border-bottom-color: #70DB93;
+    color: black;
+
+}
+.inner_cell_conf , .inner_cell_journ , .inner_cell_auth
+{
+    height: 20px;
+    border-collapse:collapse;
+    border-bottom: 1px;
+    background-color: #a1bb4d;
+    text-align: center;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 0px;
+    padding-right: 0px;
+    border-right-style: solid;
+    border-left-style: solid;
+    border-bottom-style: solid;
+    border-top-style: solid;
+    border-right-width: 2px;
+    border-left-width: 2px;
+    border-bottom-width: 2px;
+    border-top-width: 2px;
+    border-right-color: #000000;
+    border-left-color: #000000;
+    border-bottom-color: #000000;
+    border-top-color: #000000;
+    
+}
+.conference,.journal,.author
+{
+    height: 300px;
+    background-color: white;
+    padding-bottom: 1px;
+    border-collapse:collapse;
+    padding-left: 0px;
+    padding-right: 0px;
+
+}
+
+#title, #title a:visited, #title a:link
 {
     text-decoration: none;
-    color:black;
+    color:white;
+    font: 140% "Monotype Corsiva";
+}
+
+#spaced_table
+{
+    padding-left: 30px;
+    padding-top: 30px;
+}
+#spaced
+{
+    padding-right: 30px;
+}
+.pretty_writting
+{
+    color:#738f14;
+    font-weight: bold;
+    font: 160% "Monotype Corsiva";
+}
+.solid_writting
+{
+    color:#738f14;
+    font-weight: bolder;
+    font-size: 23px;
+}
+#title a:hover, #header_table a:hover , .inner_cell a:hover , .norm_link a:hover
+{
+    color: #404040;
+}
+#strong_center_text
+{
+    color:#738f14;
+    font-weight: bold;
+    padding-left: 320px;
+}
+.clicked_text
+{
+    color: #738f14;
+    font-weight: bold;
+}
+.tabbed
+{
+    padding-left: 100px
+}
+.home_white
+{
+    background-color: white;
+    min-height: 500px;
+}
+body
+{
+    background-color: #404040 ;
 }
 
 body #help-box{ font-size: 62.5%; }

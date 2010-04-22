@@ -15,7 +15,7 @@ $grid->setResultsPerPage($siteSettings->resultsPerPage);
 
 $conference_array = $conference_papers->toArray();
 $journal_array = $journal_papers->toArray();
-
+echo '<div class ="conf_back">';
 $papers = array_merge($conference_array,$journal_array);
 
 $grid->createGridFromArray($papers);
@@ -24,10 +24,11 @@ $grid->gridTitles = false;
 
 ?>
 
-<h2><?php echo $author->getFullName() ?></h2>
+<br><span class="solid_writting"><?php echo $author->getFullName() ?></span>
 
 <?php
 
 echo $grid->getGrid();
 
 ?>
+</div>

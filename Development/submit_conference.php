@@ -26,6 +26,7 @@ require_once OBJECTS.'Country.php';
 //        return false;
 //    } else return true;
 //}
+
 $recaptchaSettings = new RecaptchaSettings();
 $country = new Country("SELECT * FROM country ORDER BY name");
 $conference = new Conference($_GET['conf_id'] ? $_GET['conf_id'] : $_POST['conf_id']);
@@ -46,15 +47,17 @@ $ff->isValidCaptcha($recaptchaSettings->private_key);
 $conf_id = $conference->getId();
 $conference_exisit = new Conference($conf_id);
 
+echo '<div class ="conf_back">';
+echo '<br>';
 $conf_exists_msg = 'This Conference exists. You may ignore this message or click <a href="' . $siteSettings->siteUrl . 'conference_meetings.php?conference_id=' . $conf_id . '">here</a> if you wish to view it.';
 
 if ($flag_conf_exsist == false){
-    echo "<h2>Add a Conference</h2>";
+    echo '<span class="solid_writting">Add a Conference</span>';
 }
 else
-    echo "<h2>Add a Conference Meeting</h2>";
+    echo '<span class="pretty_writting">Add a Conference Meeting</span>';
 
-echo "<h4>Fields marked with * are required</h4>";
+echo "<br><b>Fields marked with * are required</b>";
 
 if ($conf_id==""){
     //should i have submit a new conference or add a new conference meeting
@@ -62,6 +65,7 @@ if ($conf_id==""){
 }
 else $flag_conf_exsist = true;
 //Time to check data!!!
+
 if($_POST)
 {
     $fv = new FormValidator();
@@ -184,7 +188,6 @@ if($_POST)
     }
 }
 
-
 ?>
 
 <div class="form_message" id="conf_exists"><?php echo isset($_GET['ce']) ? $conf_exists_msg : "&nbsp;"?></div>
@@ -305,6 +308,7 @@ if($_POST)
         </ol>
 
     </p>
+</div>
 </div>
 
 

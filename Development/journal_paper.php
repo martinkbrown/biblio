@@ -26,14 +26,14 @@ require_once 'jquery_blockui_lib.php';
 $j_id = $_GET['journal_id'];
 $journal = new Journal($j_id);
 $j_name_display = $journal->getValue("name");
-
+echo '<div class ="conf_back">';
 // Variables for using Recaptcha
 $recaptchaSettings = new RecaptchaSettings();
 
 ?>
 
-<h2>Add a Journal Paper</h2>
-Fields marked with * are required <br><br>
+<br><span class="solid_writting">Add a Journal Paper</span> <br>
+<b>Fields marked with * are required </b> <br><br>
 
 <?php
 $journal_paper = new JournalPaper();
@@ -256,7 +256,7 @@ if ($_POST) {
 
     </table>
 </form>
-
+</div>
 <script>
 
     var counter = <?php if (count($_POST['first_name']) == 0) echo 1; else echo count($_POST['first_name']);  ?>;

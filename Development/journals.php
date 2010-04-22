@@ -9,8 +9,9 @@ require_once OBJECTS . 'Journal.php';
 require_once OBJECTS . 'JournalGrid.php';
 // echo $_POST['journal_name']
 ?>
-
-<h2>Journals</h2>
+<div class ="conf_back">
+    <br>
+<span class="solid_writting">Journals</span><br><br>
 <a href="submit_journal.php">Click here to submit a Journal</a><br><br><br>
 
 <form name ="frm_name" method="GET" >
@@ -41,4 +42,4 @@ if ($_GET) {
 require_once 'footer.php';
 
 ?>
-
+</div>

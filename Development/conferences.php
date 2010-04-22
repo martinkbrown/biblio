@@ -17,20 +17,25 @@
         foreach(range('A','Z') as $letter){
             if ($cname != $letter){
                 // link for a specific link
-                echo "<a href=conferences.php?confname=$letter href= > $letter </a>";
+                echo '<span class = "norm_link"> <a href="conferences.php?confname='.$letter.'" >' . $letter . ' ' .'</a></span>';
             }
             else{
                 //Prints the letter instead of a link
-                echo $letter;
+                echo '<span class = "clicked_text">'.$letter. '</span>';
             }
         }
     }
 ?>
-    <h2>Conferences</h2>
-    <a href="submit_conference.php?conf_id=">Click here to submit a confrence meeting to a confrence not in our records</a>
-    <p> To submit a conference on our records, first locate the confrence by browsing or searching</p>
-    <h4>Browse Conferences by Acronym: <?php print_alpha($_GET['confname']) ?> </h4>
 
+<div class ="conf_back">
+    <br>
+    <span class="solid_writting">Conferences</span> To submit a conference on our records, first locate the conference by browsing or searching
+    <br>
+    <br>
+    <span class = "norm_link"> <a href="submit_conference.php?conf_id=">Submit a confrence meeting to a confrence not in our records</a> </span>
+   
+    <h4>Browse Conferences by Acronym: <?php print_alpha($_GET['confname']) ?> </h4>
+    <p id="strong_center_text" > OR </p>
 <!this form allows the user to view what the search and allows search to occur>
     <form action ="conferences.php?confname=&reset=y"  name ="frm_name" method="GET" >
         <p>Search Conferences: <input  type="text" id ="conf_name" name ="conf_name" value ="<?php if ($_GET['conf_name'] == "")
@@ -65,3 +70,4 @@ echo $grid->getGrid();
 <?php
     require_once 'footer.php';
 ?>
+</div>

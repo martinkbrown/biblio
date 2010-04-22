@@ -13,10 +13,11 @@ $j_name_display = $journal->getValue("name");
 $j_acroynm_display = $journal->getValue("acronym");
 
 ?>
+<div class ="conf_back">
+ <span class="solid_writting"><?php echo ($j_name_display); echo " ("; echo ($j_acroynm_display); echo ")";?> </span> <br>
 
-<h2><?php echo ($j_name_display); echo " ("; echo ($j_acroynm_display); echo ")";?> </h2>
-
+ <br>
 <?php
 echo "<a href=journal_paper.php?journal_id=$j_id>Click here to add a paper to $j_name_display</a><br></br>";
 ?>
-
+</div>
