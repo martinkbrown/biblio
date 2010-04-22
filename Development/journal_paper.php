@@ -53,8 +53,11 @@ if ($_POST) {
     $fv->isNull($_POST['journal_date'], 'Date');
     if (sizeof($_POST['journal_first_name']) > 0) {
         foreach($_POST['journal_first_name'] as $key=>$firstname) {
-            $fv->isNull($firstname, 'First Name');
-            $fv->isNull($_POST['journal_last_name'][$key], 'Last Name');
+            if (!is_numeric($firstname)) {
+                $fv->isNull($firstname, 'First Name');
+                // $isLastNameNull = $fv->isNull($_POST['journal_last_name'][$key], 'Last Name');
+                // echo $isLastNameNull;
+            }
         }
     }
 
@@ -109,10 +112,11 @@ if ($_POST) {
         $journal_paper->setValue('email',$_POST['user_email']);
         $journal_paper->setValue('create_date', $_POST['journal_date']);
 
-        // Saving All Authors 
+        // Saving All Authors
         if (sizeof($_POST['journal_first_name']) > 0) {
             foreach($_POST['journal_first_name'] as $key=>$firstname) {
                 if (is_numeric($firstname)) {
+                    echo $firstname;
                     $author = new Author($firstname);
                 }
                 else {
@@ -123,13 +127,6 @@ if ($_POST) {
                 $journal_paper->addAuthor($author);
             }
         }
-
-        // Saving Authors that are Already in DB but need to be associated with this Journal Paper
-
-// ? Author Journal Paper
-//        // Get IDs to create Author Journal Paper Class
-//        $journal_paper_id = $journal_paper->getId();
-//        $author_id = $author->getId();
 
         $journal_paper->setVolumeNumber($_POST['journal_volume'], $_POST['journal_date']);
 
