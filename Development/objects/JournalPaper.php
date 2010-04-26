@@ -83,9 +83,11 @@ class JournalPaper extends Recordset
     {
         $this->setValue("number",$volumeNumber);
         
-        $this->volumeNumber = new JournalVolumeNumber($this->_journal_id,$this->volume,$volumeNumber);
+        $this->volumeNumber = new JournalVolumeNumber($this->journal_id,$this->volume,$volumeNumber);
+        $this->volumeNumber->setValue("journal_id",$this->journal_id);
+        $this->volumeNumber->setValue("volume",$this->volume);
+        $this->volumeNumber->setValue("number",$volumeNumber);
         $this->volumeNumber->setValue("date",mktime($date));
-
     }
     /**
      *
@@ -105,13 +107,13 @@ class JournalPaper extends Recordset
         if(parent::insert())
         {
             $this->saveAuthors();
+            print_r($this->volumeNumber);die("ya");
             $this->volumeNumber->save();
             return true;
         }
 
         else return false;
 
-        //return $this->cs->save();
     }
 
     /**
