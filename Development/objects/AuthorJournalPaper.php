@@ -23,10 +23,5 @@ class AuthorJournalPaper extends Recordset
         $this->loadByQuery($query);
     }
 
-    function insert()
-    {
-        print_r($this->values);
-        die();
-    }
 }
 ?>
