@@ -17,7 +17,12 @@ class Date
         {
             return date('Y',(int) $timestamp);
         }
-	
+
+        function getMonth($timestamp)
+        {
+            return date('F', (int) $timestamp);
+        }
+
 	function getDateDifference($t1,$format = DATE)
 	{
 		$t2 = time();
