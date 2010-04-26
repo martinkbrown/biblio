@@ -3,8 +3,17 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
+define('FRONT_END','../');
+define('BACK_END','./');
+define('SETTINGS','settings/');
+
+require_once FRONT_END . 'config.php';
+require_once FRONT_END . LIB . 'SiteSettings.php';
+$siteSettings = new SiteSettings(SETTINGS . 'site_settings.txt');
 
 ?>
+
+<h5><a target="_blank" href="<?php echo $siteSettings->siteUrl ?>">Home</a></h5>
 
 <h5>Conference Management</h5>
 <ul>
@@ -22,7 +31,7 @@
 
 <h5>Data Management</h5>
 <ul>
-    <li><a href="main.php?page=view_journal_papers" target="main">Authors</a></li>
+    <li><a href="main.php?page=view_authors" target="main">Authors</a></li>
     <li><a href="main.php?page=view_publishers" target="main">Publishers</a></li>
     <li><a href="main.php?page=view_states" target="main">States</a></li>
     <li><a href="main.php?page=view_countries" target="main">Countries</a></li>

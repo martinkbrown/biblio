@@ -11,8 +11,7 @@
     $limit = $_GET['limit'];
 
     $query = "SELECT * FROM conference WHERE
-                        name REGEXP '[[:<:]]{$keyword}'
-                        AND approved = 1";
+                        name REGEXP '[[:<:]]{$keyword}'";
 
     $limit ? $query .= " LIMIT {$limit}" : "";
 

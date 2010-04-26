@@ -1,6 +1,6 @@
 <?php
 
-define('DATE','F j, Y');
+define('DATE','M j, Y');
 define('FULL_DATE','M j, Y h:m a');
 define('SHORT_DATE','m/d/Y');
 define('TIME','h:i a');
@@ -12,6 +12,11 @@ class Date
 		if($timestamp == 0)	return;
 		return date($format,$timestamp);
 	}
+
+        function getYear($timestamp)
+        {
+            return date('Y',$timestamp);
+        }
 	
 	function getDateDifference($t1,$format = DATE)
 	{

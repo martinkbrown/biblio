@@ -7,7 +7,6 @@
  */
 
 require_once FRONT_END . OBJECTS . 'ConferencePaper.php';
-require_once FRONT_END . OBJECTS . 'Country.php';
 require_once FRONT_END . OBJECTS . 'AdminConferencePaperGrid.php';
 
 if($delete)
@@ -17,33 +16,22 @@ if($delete)
 
 $cp = new ConferencePaper();
 
-$country = new Country();
-$country->loadCountries();
-
 $grid = new AdminConferencePaperGrid();
 $grid->setColumnTitle("_title", "Title");
+$grid->setColumnTitle("_authors", "Authors");
 $grid->setColumnTitle("_source", "Conference Meeting");
 $grid->setColumnTitle("_start_page", "Pages");
-$grid->setColumnTitle("_create_date", "Create Date");
+$grid->setColumnTitle("_create_date", "Updated");
 $grid->setColumnTitle("_email", "Email");
-$grid->setColumnTitle("_approved", "Email");
+$grid->setColumnTitle("_approved", "Approved");
+$grid->setColumnTitle("_options", "Options");
 $grid->setGridTitles();
 $grid->setResultsPerPage($adminSettings->resultsPerPage);
 $grid->setGridSelect();
 
-$dd = new DropDownList('name');
-$dd->setFieldName("country_id");
-$dd->setSelectedValues($country_id);
-$dd->setExtraValues(array("0"=>""));
-
 if($name)
 {
     $cp->loadConferencePapersByKeyword($name);
-}
-
-if($country_id)
-{
-    $cp->loadConferencePapersByCountryId($country_id);
 }
 
 $grid->createGridFromRecordset($cp);
@@ -56,12 +44,6 @@ $grid->createGridFromRecordset($cp);
             <td>Conference Paper Name</td>
             <td>
                 <input name="name" type="text" value="<?php echo $cp->getFormValue('name'); ?>"/>
-            </td>
-        </tr>
-        <tr>
-            <td>Country</td>
-            <td>
-                <?php echo $dd->getDropDownFromRecordset($country); ?>
             </td>
         </tr>
         <tr>

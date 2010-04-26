@@ -36,8 +36,11 @@ class Settings
             $attr[1] = trim($attr[1]);
 
             //create a variable and assign it a value
-            $this->$attr[0] = $attr[1];
-            $GLOBALS[$attr[0]] = $attr[1];
+            if($attr[0])
+            {
+                $this->$attr[0] = $attr[1];
+                $GLOBALS[$attr[0]] = $attr[1];
+            }
         }
 
         fclose($handle);

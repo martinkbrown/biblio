@@ -18,11 +18,13 @@ $jp = new JournalPaper();
 
 $grid = new AdminJournalPaperGrid();
 $grid->setColumnTitle("_title", "Title");
-$grid->setColumnTitle("_source", "Journal Meeting");
+$grid->setColumnTitle("_authors", "Authors");
+$grid->setColumnTitle("_source", "Journal");
 $grid->setColumnTitle("_start_page", "Pages");
-$grid->setColumnTitle("_create_date", "Create Date");
+$grid->setColumnTitle("_create_date", "Updated");
 $grid->setColumnTitle("_email", "Email");
-$grid->setColumnTitle("_approved", "Email");
+$grid->setColumnTitle("_approved", "Approved");
+$grid->setColumnTitle("_options", "Options");
 $grid->setGridTitles();
 $grid->setResultsPerPage($adminSettings->resultsPerPage);
 $grid->setGridSelect();

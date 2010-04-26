@@ -11,7 +11,7 @@ require_once LIB . 'Date.php';
  */
 class JournalVolumeGrid extends Grid {
     function handle_volume($row) {
-        return '<a href="journal_volume_toc.php?journal_volume_id='.$row['id'].'">Volume '.$row['volume'].', '.Date::getYear($row['date']).' </a>';
+        return '<a href="journal_volume_toc.php?journal_id='.$row['journal_id'].'&volume='.$row['volume'].'">Volume '.$row['volume'].', '.Date::getYear($row['date']).' </a>';
     }
 }
 ?>

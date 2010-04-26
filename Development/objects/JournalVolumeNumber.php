@@ -29,8 +29,8 @@ class JournalVolumeNumber extends Recordset
     {
         $journal_id = (int) $journal_id;
 
-        $query = "SELECT id, journal_id, volume, date FROM journal_volume_number
-                    WHERE journal_id = $journal_id";
+        $query = "SELECT volume, id, journal_id FROM journal_paper
+                    WHERE journal_id = $journal_id GROUP BY journal_id ";
 
         $this->loadByQuery($query);
     }

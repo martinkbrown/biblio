@@ -27,9 +27,9 @@ $j_acroynm_display = $journal->getValue("acronym");
     $journalVolumeNumber = new JournalVolumeNumber();
     $journalVolumeNumber->loadJournalVolumesByJournalId($j_id);
     $grid = new JournalVolumeGrid();
-    $grid->setColumnTitle("_name","");
+    $grid->setColumnTitle("_volume","");
     $grid->createGridFromRecordset($journalVolumeNumber);
-    $grid->getGrid();
+    echo $grid->getGrid();
 
     ?>
 </div>
