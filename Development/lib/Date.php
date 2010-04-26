@@ -15,7 +15,7 @@ class Date
 
         function getYear($timestamp)
         {
-            return date('Y',$timestamp);
+            return date('Y',(int) $timestamp);
         }
 	
 	function getDateDifference($t1,$format = DATE)

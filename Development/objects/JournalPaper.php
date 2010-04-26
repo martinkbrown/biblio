@@ -66,6 +66,7 @@ class JournalPaper extends Recordset
         $journal_id = (int) $journal_id;
         $volume = (int) $volume;
         $this->query .= " AND jp.journal_id = $journal_id AND jp.volume = $volume ";
+        $this->loadByQuery($this->query);
     }
 
     function loadJournalPapersByKeyword($keyword)

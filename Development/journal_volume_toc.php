@@ -8,7 +8,7 @@ require_once FRONT_END . OBJECTS . 'Author.php';
 require_once FRONT_END . OBJECTS . 'JournalPaper.php';
 require_once FRONT_END . OBJECTS . 'Journal.php';
 require_once FRONT_END . OBJECTS . 'JournalVolumeNumber.php';
-require_once FRONT_END . OBJECTS . 'JournalVolumeGrid.php';
+require_once FRONT_END . OBJECTS . 'JournalPaperGrid.php';
 
 $j_v_id = $_GET['journal_volume_id'];
 $journalVolumeNumber = new JournalVolumeNumber($j_v_id);
@@ -24,12 +24,14 @@ $j_name_display = $journal->getValue("name");
     <br>
 <?php
 // Printing out Volumes for JournalVolume Selected
-$grid = new JournalVolumeGrid();
+$grid = new JournalPaperGrid();
 // Getting Journal Paper
 $journalPaper = new JournalPaper();
-$journalPaper->loadJournalPapersByVolume($journal->getValue('id'), $j_v_id);
+$journalPaper->loadJournalPapersByVolume($_GET['journal_id'], $_GET['volume']);
 
 $grid->setColumnTitle('_volume', "");
+$grid->createGridFromRecordset($journalPaper);
+echo $grid->getGrid();
 
 
 ?>
