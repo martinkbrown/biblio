@@ -20,7 +20,6 @@ class JournalPaperGrid extends Grid {
         $author = new Author();
 
         $author->getAuthorsByJournalPaperId($row['journal_paper_id']);
-
         $author = $author->toArray();
         $authors = "";
         $counter = 1;
