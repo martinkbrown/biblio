@@ -6,6 +6,8 @@
 require_once 'header.php';
 require_once LIB . 'Grid.php';
 require_once OBJECTS . 'Journal.php';
+require_once OBJECTS . 'JournalVolumeNumber.php';
+require_once OBJECTS . 'JournalVolumeGrid.php';
 
 $j_id = $_GET['journal_id'];
 $journal = new Journal($j_id);
