@@ -18,9 +18,15 @@ class AuthorJournalPaper extends Recordset
 
         $query = "SELECT * FROM author_journal_paper WHERE author_id = $author_id AND journal_paper_id = $paper_id";
 
-        parent::Recordset(0,"author_journal_paper");
+        parent::Recordset($query,"author_journal_paper");
 
         $this->loadByQuery($query);
+    }
+
+    function insert()
+    {
+        print_r($this->values);
+        die();
     }
 }
 ?>

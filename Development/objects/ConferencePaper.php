@@ -56,7 +56,7 @@ class ConferencePaper extends Recordset {
         }
         else
         {
-            parent::Recordset($id,"conference_paper");
+            parent::Recordset($this->query . " AND acp.main_author=1","conference_paper");
         }
     }
 

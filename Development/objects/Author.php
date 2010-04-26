@@ -16,6 +16,8 @@ class Author extends Recordset
 {
     var $query = "SELECT a.id, a.firstname, a.initial, a.lastname FROM author a WHERE 1";
 
+    var $loadPapers = true;
+
     var $conference_papers;
     var $journal_papers;
 
@@ -33,6 +35,16 @@ class Author extends Recordset
         }
     }
 
+    function setLoadPapers($load = true)
+    {
+        $this->loadPapers = $load;
+    }
+
+    function loadAuthors()
+    {
+        $this->loadByQuery($this->query);
+    }
+
     function getFullName()
     {
         return $this->firstname . " " . $this->initial . " " . $this->lastname;
@@ -42,12 +54,15 @@ class Author extends Recordset
     {
         if(parent::next())
         {
-            $this->conference_papers = new ConferencePaper();
-            $this->conference_papers->getConferencePapersByAuthorId($this->getId());
+            if($this->loadPapers)
+            {
+                $this->conference_papers = new ConferencePaper();
+                $this->conference_papers->getConferencePapersByAuthorId($this->getId());
 
-            $this->journal_papers = new JournalPaper();
-            $this->journal_papers->getJournalPapersByAuthorId($this->getId());
-            
+                $this->journal_papers = new JournalPaper();
+                $this->journal_papers->getJournalPapersByAuthorId($this->getId());
+            }
+
             return true;
         }
 

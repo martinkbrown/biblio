@@ -24,5 +24,15 @@ class JournalVolumeNumber extends Recordset
 
         $this->loadByQuery($query);
     }
+
+    function loadJournalVolumesByJournalId($journal_id)
+    {
+        $journal_id = (int) $journal_id;
+
+        $query = "SELECT id, journal_id, volume, date FROM journal_volume_number
+                    WHERE journal_id = $journal_id";
+
+        $this->loadByQuery($query);
+    }
 }
 ?>

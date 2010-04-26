@@ -5,11 +5,11 @@
  */
 require_once '../lib/Grid.php';
 /**
- * Description of AdminJournalPaperGrid
+ * Description of AdminJournalGrid
  *
  * @author martin
  */
-class AdminConferenceGrid extends Grid {
+class AdminJournalGrid extends Grid {
     //put your code here
     function handle_name($row)
     {
@@ -38,7 +38,7 @@ class AdminConferenceGrid extends Grid {
 
     function handle_options($row)
     {
-        return '<a href="main.php?page=edit_conference&conference_id=' . $row['id'] . '">Edit</a>';
+        return '<a href="main.php?page=edit_journal&journal_id=' . $row['id'] . '">Edit</a>';
     }
 }
 ?>

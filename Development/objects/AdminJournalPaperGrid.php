@@ -10,7 +10,7 @@ require_once 'Author.php';
  *
  * @author martin
  */
-class AdminConferencePaperGrid extends Grid {
+class AdminJournalPaperGrid extends Grid {
     //put your code here
     function handle_title($row)
     {
@@ -22,7 +22,7 @@ class AdminConferencePaperGrid extends Grid {
         $author = new Author();
         $authors = "";
 
-        $author->getAuthorsByConferencePaperId($row['conference_paper_id']);
+        $author->getAuthorsByJournalPaperId($row['journal_paper_id']);
 
         if($author->id)
         {
@@ -32,7 +32,7 @@ class AdminConferencePaperGrid extends Grid {
                 $authors .= $author->initial ? $author->initial . " " : "";
                 $authors .= $author->lastname;
                 $authors .= "<br/>";
-
+                
             }while($author->next());
         }
 
@@ -69,7 +69,7 @@ class AdminConferencePaperGrid extends Grid {
 
     function handle_options($row)
     {
-        return '<a href="main.php?page=edit_conference_paper&conference_paper_id=' . $row['id'] . '">Edit</a>';
+        return '<a href="main.php?page=edit_journal_paper&journal_paper_id=' . $row['id'] . '">Edit</a>';
     }
 }
 ?>

@@ -47,7 +47,7 @@ class JournalPaper extends Recordset
         }
         else
         {
-            parent::Recordset($id,"journal_paper");
+            parent::Recordset($this->query . " AND ajp.main_author=1","journal_paper");
         }
         $this->volumeNumber = new JournalVolumeNumber($this->_journal_id,$this->volume,$this->number);
     }
@@ -59,6 +59,13 @@ class JournalPaper extends Recordset
         $this->query .= " AND a.id = $author_id";
 
         $this->loadByQuery($this->query . " ORDER BY " . $this->orderBy);
+    }
+
+    function loadJournalPapersByVolume($journal_id, $volume)
+    {
+        $journal_id = (int) $journal_id;
+        $volume = (int) $volume;
+        $this->query .= " AND jp.journal_id = $journal_id AND jp.volume = $volume ";
     }
 
     function loadJournalPapersByKeyword($keyword)
