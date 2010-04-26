@@ -12,12 +12,25 @@ require_once LIB . 'Date.php';
 class JournalPaperGrid extends Grid {
 
     function handle_volume($row) {
-        echo "Volume". $row['volume'].", Number ". $row['number']. ", ".Date::getMonth($row['date'])." ". Date::getYear($row['date']);
-        echo "<br>";
-        $journal = new Journal($row['journal_id']);
-        
-        echo $row[''] ;
-//        print_r($row);
+        $paperInfo = "Volume ". $row['volume'].", Number ". $row['number']. ", ".Date::getMonth($row['date'])." ". Date::getYear($row['date']).
+                "<br/>". $row['title']. ". &nbsp;   "."Pages ". $row['start_page']. " - ". $row['end_page'];
+
+        // Displaying Authors
+
+        $author = new Author();
+
+        $author->getAuthorsByJournalPaperId($row['journal_paper_id']);
+
+        $author = $author->toArray();
+        $authors = "";
+        $counter = 1;
+        foreach($author as $key=>$auth) {
+            $name = $auth['firstname'];
+            $name .= $auth['initial'] ? " " . $auth['initial'] : "";
+            $name .= " " . $auth['lastname'];
+            $authors .=  "<a href=\"author_papers.php?author_id=$key\">$name</a>&nbsp;&nbsp;&nbsp;";
+        }
+        return $paperInfo . "<br/><br/>" . $authors;
     }
 }
 ?>

@@ -28,11 +28,8 @@ $j_name_display = $journal->getValue("name");
 // Getting Journal Paper
     $journalPaper = new JournalPaper();
     $journalPaper->loadJournalPapersByVolume($_GET['journal_id'], $_GET['volume']);
-
-
+    $grid->setColumnTitle("_volume", "");
     $grid->createGridFromRecordset($journalPaper);
     echo $grid->getGrid();
-
-
     ?>
 </div>
