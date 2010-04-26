@@ -10,6 +10,8 @@ require_once LIB . 'Date.php';
  * @author Sihle
  */
 class JournalVolumeGrid extends Grid {
+    var $current_year;
+
     function handle_volume($row) {
         return '<a href="journal_volume_toc.php?journal_id='.$row['journal_id'].'&volume='.$row['volume'].'">Volume '.$row['volume'].', '.Date::getYear($row['date']).' </a>';
     }

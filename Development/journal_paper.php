@@ -256,7 +256,7 @@ if ($_POST) {
 
     </table>
 </form>
-</div>
+
 <script>
 
     var counter = <?php if (count($_POST['first_name']) == 0) echo 1; else echo count($_POST['first_name']);  ?>;
