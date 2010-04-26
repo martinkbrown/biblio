@@ -20,7 +20,7 @@ class JournalVolumeNumber extends Recordset
         $query = "SELECT * FROM journal_volume_number WHERE number = $number AND journal_id = $journal_id
                     AND volume = $volume";
 
-        parent::Recordset(0,"author_journal_paper");
+        parent::Recordset(0,"journal_volume_number");
 
         $this->loadByQuery($query);
     }
