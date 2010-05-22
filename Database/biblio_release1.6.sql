@@ -1,1 +1,0 @@
-ALTER TABLE `conference`  DROP INDEX `acronym`;
