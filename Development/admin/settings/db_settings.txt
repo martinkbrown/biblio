@@ -1,4 +1,0 @@
-dbHost=localhost
-dbUsername=root
-dbPassword=
-dbName=biblio_test

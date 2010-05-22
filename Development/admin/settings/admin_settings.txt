@@ -1,2 +1,0 @@
-resultsPerPage=10
-email=sherene.campbell@gmail.com

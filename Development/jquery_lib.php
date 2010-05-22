@@ -1,2 +1,0 @@
-<script type="text/javascript" src="<?php echo FRONT_END ?>js/jquery/jquery-1.4.1.min.js"></script>
-<script type="text/javascript" src="<?php echo FRONT_END ?>js/jquery/development-bundle/ui/jquery-ui-1.8rc3.custom.js"></script>

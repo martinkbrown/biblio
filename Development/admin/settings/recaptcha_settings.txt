@@ -1,3 +1,0 @@
-public_key=6LeuSgsAAAAAAM2XoF1PEzN-dDg3Yinkh9tmAMWl
-private_key=6LeuSgsAAAAAALr0hQi3qRk9ZrxwsTwHskp1AFfD
-enable_recaptcha=0
