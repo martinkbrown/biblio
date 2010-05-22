@@ -60,6 +60,28 @@ class ConferencePaper extends Recordset {
         }
     }
 
+    function approve()
+    {
+        if($this->id)
+        {
+            $this->setValue("approved",1);
+            return $this->update();
+        }
+
+        return false;
+    }
+
+    function suspend()
+    {
+        if($this->id)
+        {
+            $this->setValue("approved",0);
+            return $this->update();
+        }
+
+        return false;
+    }
+
     function loadConferencePapersByKeyword($keyword)
     {
         $sql =& sql();

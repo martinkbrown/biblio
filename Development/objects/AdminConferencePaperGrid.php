@@ -69,7 +69,18 @@ class AdminConferencePaperGrid extends Grid {
 
     function handle_options($row)
     {
-        return '<a href="main.php?page=edit_conference_paper&conference_paper_id=' . $row['id'] . '">Edit</a>';
+        $options = '<a href="main.php?page=edit_conference_paper&conference_paper_id=' . $row['id'] . '">Edit</a>';
+        if(!$row['approved'])
+        {
+            $options .= '&nbsp;<a href="main.php?page=view_conference_papers&action=approve&conference_paper_id='.$row['id'].'">Approve</a>';
+            $options .= "&nbsp;<a href=\"javascript:;\" onclick=\"if(confirm('Are you sure you want to DENY this submission and DELETE this record?')) window.location.href='main.php?page=view_conference_papers&action=delete&ids[]=".$row['id']."'\" >Deny</a>";
+        }
+        else
+        {
+            $options .= '&nbsp;<a href="main.php?page=view_conference_papers&action=suspend&conference_paper_id='.$row['id'].'">Suspend</a>';
+        }
+
+        return $options;
     }
 }
 ?>

@@ -1,1 +1,1 @@
-<script type='text/javascript' src='js/jquery/jquery-timer/jquery.timer.js'></script>
+<script type='text/javascript' src='<?php echo FRONT_END ?>js/jquery/jquery-timer/jquery.timer.js'></script>

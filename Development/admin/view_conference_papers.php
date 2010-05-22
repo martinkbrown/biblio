@@ -9,9 +9,20 @@
 require_once FRONT_END . OBJECTS . 'ConferencePaper.php';
 require_once FRONT_END . OBJECTS . 'AdminConferencePaperGrid.php';
 
-if($delete)
+$cp = new ConferencePaper();
+
+if($delete || $action == "delete")
 {
     $cp->delete($ids);
+}
+
+if($conference_paper_id && $action == "approve")
+{
+    $cp->approve();
+}
+else if($action == "suspend")
+{
+    $cp->suspend();
 }
 
 $cp = new ConferencePaper();
@@ -56,7 +67,7 @@ $grid->createGridFromRecordset($cp);
 
 <a href="main.php?page=edit_conference_paper">Click here to add a Conference Paper</a><br/><br/>
 
-<form name="view_Conference Papers" method="POST" action="main.php?page=view_Conference Papers" onsubmit="return confirm('Are you sure you want to DELETE the selected Conference Papers?')">
+<form name="view_Conference Papers" method="POST" action="main.php?page=view_conference_papers" onsubmit="return confirm('Are you sure you want to DELETE the selected Conference Papers?')">
 
         <?php
 

@@ -5,8 +5,8 @@ require_once FRONT_END . OBJECTS . 'Conference.php';
 require_once FRONT_END . OBJECTS . 'State.php';
 require_once FRONT_END . OBJECTS . 'Country.php';
 require_once FRONT_END . OBJECTS . 'Publisher.php';
-require_once 'jquery_lib.php';
-require_once 'jquery_calendar_lib.php';
+require_once FRONT_END . 'jquery_lib.php';
+require_once FRONT_END . 'jquery_autocomplete_lib.php';
 
 $conferenceMeeting = new ConferenceMeeting($conference_meeting_id);
 

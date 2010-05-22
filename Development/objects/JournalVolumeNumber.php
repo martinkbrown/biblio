@@ -14,7 +14,7 @@ class JournalVolumeNumber extends Recordset
     function JournalVolumeNumber($journal_id=0,$volume=0,$number=0)
     {
         $journal_id = (int) $journal_id;
-        $volume = (int) $volume_id;
+        $volume = (int) $volume;
         $number = (int) $number;
 
         $query = "SELECT * FROM journal_volume_number WHERE number = $number AND journal_id = $journal_id

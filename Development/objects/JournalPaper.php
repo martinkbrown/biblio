@@ -49,7 +49,36 @@ class JournalPaper extends Recordset
         {
             parent::Recordset($this->query . " AND ajp.main_author=1","journal_paper");
         }
-        $this->volumeNumber = new JournalVolumeNumber($this->_journal_id,$this->volume,$this->number);
+
+        $this->volumeNumber = new JournalVolumeNumber($this->journal_id,$this->volume,$this->number);
+    }
+
+    function approve()
+    {
+        if($this->id)
+        {
+            $this->setValue("approved",1);
+            return parent::update();
+        }
+        
+        return false;
+    }
+
+    function suspend()
+    {
+        if($this->id)
+        {
+            $this->setValue("approved",0);
+            return parent::update();
+        }
+
+        return false;
+    }
+
+    function loadApprovedJournalPapers()
+    {
+        $this->query .= " AND jp.approved = 1";
+        $this->loadByQuery($this->query);
     }
 
     function getJournalPapersByAuthorId($author_id)
@@ -107,7 +136,6 @@ class JournalPaper extends Recordset
         if(parent::insert())
         {
             $this->saveAuthors();
-            print_r($this->volumeNumber);die("ya");
             $this->volumeNumber->save();
             return true;
         }

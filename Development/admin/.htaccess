@@ -2,7 +2,7 @@
 deny from all
 </Files>
 Options -Indexes
-AuthUserFile C:\wamp\www\biblio\.htpasswd
+AuthUserFile D:\wamp\www\biblio\.htpasswd
 AuthGroupFile /dev/null
 AuthName "Please enter your ID and password"
 AuthType Basic

@@ -130,10 +130,10 @@ if ($_POST) {
             }
         }
 
-        $journal_paper->setVolumeNumber($_POST['journal_volume'], $_POST['journal_date']);
+        $journal_paper->setVolumeNumber($_POST['journal_number'], $_POST['journal_date']);
 
         // FIXME: Add this confirmation page option to Shereen's submit_verify page
-        if($journal_paper->save()) {
+        if($journal_paper->insert()) {
             // Display confirmation page
             $util = new Utilities();
             $util->redirect("submit_journal_paper_confirm.php");

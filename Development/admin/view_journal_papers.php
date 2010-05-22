@@ -9,12 +9,21 @@
 require_once FRONT_END . OBJECTS . 'JournalPaper.php';
 require_once FRONT_END . OBJECTS . 'AdminJournalPaperGrid.php';
 
-if($delete)
+$jp = new JournalPaper();
+
+if($delete || $action == "delete")
 {
     $jp->delete($ids);
 }
 
-$jp = new JournalPaper();
+if($journal_paper_id && $action == "approve")
+{
+    $jp->approve();
+}
+else if($action == "suspend")
+{
+    $jp->suspend();
+}
 
 $grid = new AdminJournalPaperGrid();
 $grid->setColumnTitle("_title", "Title");
@@ -56,7 +65,7 @@ $grid->createGridFromRecordset($jp);
 
 <a href="main.php?page=edit_journal_paper">Click here to add a Journal Paper</a><br/><br/>
 
-<form name="view_Journal Papers" method="POST" action="main.php?page=view_Journal Papers" onsubmit="return confirm('Are you sure you want to DELETE the selected Journal Papers?')">
+<form name="view_Journal Papers" method="POST" action="main.php?page=view_journal_papers" onsubmit="return confirm('Are you sure you want to DELETE the selected Journal Papers?')">
 
         <?php
 

@@ -11,7 +11,9 @@ define('SETTINGS','settings/');
 
 require_once FRONT_END . 'config.php';
 require_once FRONT_END . LIB . 'AdminSettings.php';
+require_once FRONT_END . LIB . 'SiteSettings.php';
 $adminSettings = new AdminSettings(SETTINGS . 'admin_settings.txt');
+$siteSettings = new SiteSettings(SETTINGS . 'site_settings.txt');
 
 foreach($_POST as $key=>$value)
 {

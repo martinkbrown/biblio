@@ -69,7 +69,18 @@ class AdminJournalPaperGrid extends Grid {
 
     function handle_options($row)
     {
-        return '<a href="main.php?page=edit_journal_paper&journal_paper_id=' . $row['id'] . '">Edit</a>';
+        $options = '<a href="main.php?page=edit_journal_paper&journal_paper_id=' . $row['id'] . '">Edit</a>';
+        if(!$row['approved'])
+        {
+            $options .= '&nbsp;<a href="main.php?page=view_journal_papers&action=approve&journal_paper_id='.$row['id'].'">Approve</a>';
+            $options .= "&nbsp;<a href=\"javascript:;\" onclick=\"if(confirm('Are you sure you want to DENY this submission and DELETE this record?')) window.location.href='main.php?page=view_journal_papers&action=delete&ids[]=".$row['id']."'\" >Deny</a>";
+        }
+        else
+        {
+            $options .= '&nbsp;<a href="main.php?page=view_journal_papers&action=suspend&journal_paper_id='.$row['id'].'">Suspend</a>';
+        }
+
+        return $options;
     }
 }
 ?>
